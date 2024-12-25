@@ -1,4 +1,4 @@
-package de.tudl.playground.datorum.event;
+package de.tudl.playground.datorum.ui.event;
 
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationEvent;
