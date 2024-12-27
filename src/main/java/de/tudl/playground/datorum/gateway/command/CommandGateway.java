@@ -1,4 +1,4 @@
-package de.tudl.playground.datorum.commandgateway;
+package de.tudl.playground.datorum.gateway.command;
 
 public interface CommandGateway
 {

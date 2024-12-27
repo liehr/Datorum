@@ -1,8 +1,6 @@
-package de.tudl.playground.datorum.modulith.auth.command.data;
+package de.tudl.playground.datorum.modulith.user.command.data;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Setter;
 
@@ -25,7 +23,6 @@ public class User {
      * This ID is automatically generated as a UUID upon entity creation.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     /**
@@ -42,7 +39,7 @@ public class User {
 
     /**
      * The cryptographic salt used in hashing the user's password.
-     * Salts add an additional layer of security by ensuring that identical passwords have different hashes.
+     * Salts add a layer of security by ensuring that identical passwords have different hashes.
      */
     private String passwordSalt;
 
@@ -51,4 +48,15 @@ public class User {
      * This defines the user's permissions and access levels within the system.
      */
     private String role;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", passwordSalt='" + passwordSalt + '\'' +
+                ", role='" + role + '\'' +
+                '}';
+    }
 }

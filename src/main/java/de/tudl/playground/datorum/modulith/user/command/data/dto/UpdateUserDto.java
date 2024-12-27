@@ -1,4 +1,4 @@
-package de.tudl.playground.datorum.modulith.auth.command.data.dto;
+package de.tudl.playground.datorum.modulith.user.command.data.dto;
 
 /**
  * A Data Transfer Object (DTO) for updating an existing user's information.

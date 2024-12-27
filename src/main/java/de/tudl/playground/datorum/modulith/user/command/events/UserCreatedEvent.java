@@ -1,4 +1,4 @@
-package de.tudl.playground.datorum.modulith.auth.command.events;
+package de.tudl.playground.datorum.modulith.user.command.events;
 
 import de.tudl.playground.datorum.modulith.eventstore.AggregateId;
 import lombok.Getter;

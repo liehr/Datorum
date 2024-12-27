@@ -1,9 +1,11 @@
-package de.tudl.playground.datorum.modulith.auth.command.aggregate;
+package de.tudl.playground.datorum.modulith.user.command.aggregate;
 
-import de.tudl.playground.datorum.modulith.auth.command.data.dto.CreateUserDto;
-import de.tudl.playground.datorum.modulith.auth.command.data.dto.UpdateUserDto;
-import de.tudl.playground.datorum.modulith.auth.command.events.UserCreatedEvent;
-import de.tudl.playground.datorum.modulith.auth.command.events.UserUpdatedEvent;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.tudl.playground.datorum.modulith.user.command.data.dto.CreateUserDto;
+import de.tudl.playground.datorum.modulith.user.command.data.dto.UpdateUserDto;
+import de.tudl.playground.datorum.modulith.user.command.events.UserCreatedEvent;
+import de.tudl.playground.datorum.modulith.user.command.events.UserUpdatedEvent;
+import de.tudl.playground.datorum.modulith.eventstore.EventStore;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -132,8 +134,41 @@ public class UserAggregate {
      * @param events the list of historical domain events to apply.
      */
     public void rehydrate(List<Object> events) {
-        for (Object event : events) {
-            applyEvent(event);
+        // Flatten the events list (extract EventStore from nested structures)
+        events.stream()
+                .filter(event -> event instanceof List<?>)  // Only process if event is a List
+                .map(event -> (List<?>) event)  // Cast to List
+                .flatMap(List::stream)  // Flatten nested List
+                .filter(EventStore.class::isInstance)  // Only process if event is EventStore
+                .map(EventStore.class::cast)  // Cast to EventStore
+                .forEach(this::processEvent);  // Process each EventStore
+    }
+
+    private void processEvent(EventStore eventStore) {
+        // Deserialize and apply the event
+        try {
+            String eventType = eventStore.getEventType();
+            String eventData = eventStore.getEventData();
+
+            Object deserializedEvent = deserializeEvent(eventType, eventData);
+
+            if (deserializedEvent != null) {
+                applyEvent(deserializedEvent);
+            } else {
+                throw new IllegalArgumentException("Unknown event type: " + eventType);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error processing event: " + eventStore.getEventType(), e);
         }
     }
+
+    private Object deserializeEvent(String eventType, String eventData) throws Exception {
+        return switch (eventType) {
+            case "UserCreatedEvent" -> new ObjectMapper().readValue(eventData, UserCreatedEvent.class);
+            case "UserUpdatedEvent" -> new ObjectMapper().readValue(eventData, UserUpdatedEvent.class);
+            // Add other event types as needed
+            default -> null;
+        };
+    }
+
 }

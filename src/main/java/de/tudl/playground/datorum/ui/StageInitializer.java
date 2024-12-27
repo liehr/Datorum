@@ -1,21 +1,29 @@
 package de.tudl.playground.datorum.ui;
 
-import de.tudl.playground.datorum.commandgateway.CommandGateway;
-import de.tudl.playground.datorum.modulith.auth.command.commands.CreateUserCommand;
+import de.tudl.playground.datorum.gateway.command.CommandGateway;
+import de.tudl.playground.datorum.gateway.query.QueryGateway;
+import de.tudl.playground.datorum.modulith.user.command.data.User;
+import de.tudl.playground.datorum.ui.controller.UserController;
 import de.tudl.playground.datorum.ui.event.StageReadyEvent;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
+import java.util.List;
 
+@Slf4j
 @Component
 public class StageInitializer implements ApplicationListener<StageReadyEvent> {
 
     private final CommandGateway commandGateway;
+    private final QueryGateway queryGateway;
+    private final UserController userController;
 
-    public StageInitializer(CommandGateway commandGateway) {
+    public StageInitializer(CommandGateway commandGateway, QueryGateway queryGateway, UserController userController) {
         this.commandGateway = commandGateway;
+        this.queryGateway = queryGateway;
+        this.userController = userController;
     }
 
     @Override
@@ -24,14 +32,13 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
         stage.setTitle("Datorum");
         stage.show();
 
-        CreateUserCommand command = new CreateUserCommand(
-                UUID.randomUUID().toString(),
-                "Test",
-                "Test",
-                "Test",
-                "User"
-        );
+        List<User> users = userController.getAllUsers();
 
-        commandGateway.send(command);
+        for(User user : users)
+        {
+            log.info(String.valueOf(user));
+        }
+
+        userController.updateUser("351346c4-90eb-4292-aa2d-694b5f49feea");
     }
 }

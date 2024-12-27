@@ -1,9 +1,11 @@
-package de.tudl.playground.datorum.modulith.auth.command.events;
+package de.tudl.playground.datorum.modulith.user.command.events;
 
-import de.tudl.playground.datorum.modulith.auth.command.data.User;
-import de.tudl.playground.datorum.modulith.auth.command.data.UserRepository;
+import de.tudl.playground.datorum.modulith.user.command.data.User;
+import de.tudl.playground.datorum.modulith.user.command.data.UserRepository;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 /**
  * Event handler for handling {@link UserCreatedEvent} and persisting user data in the repository.
@@ -33,9 +35,25 @@ public class UserEventHandler {
      * @param event the {@link UserCreatedEvent} containing the data of the created user.
      */
     @EventListener
-    public void on(UserCreatedEvent event) {
+    public void on(UserCreatedEvent event)
+    {
         User user = new User();
+        user.setId(UUID.fromString(event.userId()));
         user.setUsername(event.getUsername());
+        user.setPasswordHash(event.getPasswordHash());
+        user.setPasswordSalt(event.getPasswordSalt());
+        user.setRole(event.getRole());
+
+        userRepository.save(user);
+    }
+
+    @EventListener
+    public void on(UserUpdatedEvent event)
+    {
+        User user = userRepository.findById(UUID.fromString(event.userId()))
+                .orElseThrow();
+
+        user.setUsername(event.userName());
         user.setPasswordHash(event.getPasswordHash());
         user.setPasswordSalt(event.getPasswordSalt());
         user.setRole(event.getRole());

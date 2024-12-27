@@ -1,4 +1,4 @@
-package de.tudl.playground.datorum.commandgateway;
+package de.tudl.playground.datorum.gateway.command;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;

@@ -1,7 +1,8 @@
-package de.tudl.playground.datorum.modulith.auth.command.commands;
+package de.tudl.playground.datorum.modulith.user.command.commands;
 
-import de.tudl.playground.datorum.modulith.auth.command.aggregate.UserAggregate;
-import de.tudl.playground.datorum.modulith.auth.command.data.dto.CreateUserDto;
+import de.tudl.playground.datorum.modulith.user.command.aggregate.UserAggregate;
+import de.tudl.playground.datorum.modulith.user.command.data.dto.CreateUserDto;
+import de.tudl.playground.datorum.modulith.user.command.data.dto.UpdateUserDto;
 import de.tudl.playground.datorum.modulith.eventstore.EventPublisher;
 import de.tudl.playground.datorum.modulith.eventstore.EventStoreRepository;
 import org.springframework.context.event.EventListener;
@@ -57,12 +58,8 @@ public class UserCommandHandler {
      */
     @EventListener
     public void handle(CreateUserCommand command) {
-        // Retrieve existing events for the aggregate from the event store.
-        List<Object> events = Collections.singletonList(eventStoreRepository.findByAggregateId(command.getUserId()));
-
         // Create a new user aggregate and rehydrate its state using the retrieved events.
         UserAggregate aggregate = new UserAggregate();
-        aggregate.rehydrate(events);
 
         // Convert the command into a DTO to apply the business logic.
         CreateUserDto createDto = new CreateUserDto(
@@ -77,6 +74,32 @@ public class UserCommandHandler {
 
         // Publish the changes as domain events to propagate the state changes.
         for (Object event : aggregate.getChanges()) {
+            eventPublisher.publishEvent(event);
+        }
+    }
+
+    @EventListener
+    public void handle(UpdateUserCommand command)
+    {
+        List<Object> events = Collections.singletonList(eventStoreRepository.findByAggregateId(command.getUserId()));
+
+        // Create a new user aggregate and rehydrate its state using the retrieved events.
+        UserAggregate aggregate = new UserAggregate();
+
+        if (events.size() > 0)
+            aggregate.rehydrate(events);
+
+        UpdateUserDto updateDto = new UpdateUserDto(
+                command.getUsername(),
+                command.getPasswordHash(),
+                command.getPasswordSalt(),
+                command.getRole()
+        );
+
+        aggregate.updateUser(updateDto);
+
+        for (Object event : aggregate.getChanges())
+        {
             eventPublisher.publishEvent(event);
         }
     }

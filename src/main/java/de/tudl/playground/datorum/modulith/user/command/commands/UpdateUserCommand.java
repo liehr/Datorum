@@ -1,22 +1,13 @@
-package de.tudl.playground.datorum.modulith.auth.command.commands;
+package de.tudl.playground.datorum.modulith.user.command.commands;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
-import java.time.Clock;
-
-/**
- * Represents a command to create a new user in the system.
- * This command encapsulates all necessary user details required for creation.
- * <p>
- * Instances of this class are immutable and can be constructed using the builder pattern provided by Lombok's {@link Builder} annotation.
- * </p>
- */
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class CreateUserCommand extends ApplicationEvent {
-
-    // Getters and Setters or Lombok @Getter and @Setter if needed
+public class UpdateUserCommand extends ApplicationEvent
+{
     /**
      * The unique identifier for the user.
      * This ID should be unique across the system to prevent conflicts.
@@ -56,13 +47,12 @@ public class CreateUserCommand extends ApplicationEvent {
      * @param passwordSalt The cryptographic salt used for hashing the password.
      * @param role        The role assigned to the user.
      */
-    public CreateUserCommand(String userId, String username, String passwordHash, String passwordSalt, String role) {
-        super(userId); // The source of the event is typically the userId or any object you want to reference.
+    public UpdateUserCommand(String userId, String username, String passwordHash, String passwordSalt, String role) {
+        super(userId);
         this.userId = userId;
         this.username = username;
         this.passwordHash = passwordHash;
         this.passwordSalt = passwordSalt;
         this.role = role;
     }
-
 }
