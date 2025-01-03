@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="15" xmlns:fx="http://javafx.com/fxml" stylesheets="@Register.fxml.css" fx:controller="de.tudl.playground.datorum.ui.controller.RegisterController" prefWidth="1280.0" prefHeight="720.0">
+    <Label text="Register" styleClass="header-label" />
+
+    <VBox alignment="CENTER" spacing="10" styleClass="form-container">
+        <!-- Username Field -->
+        <Label text="Username:" />
+        <TextField fx:id="usernameField" promptText="Choose a username">
+            <tooltip>
+                <Tooltip text="Enter a unique username. This is typically your email or a unique identifier." />
+            </tooltip>
+        </TextField>
+
+        <!-- Email Field -->
+        <Label text="Email:" />
+        <TextField fx:id="emailField" promptText="Enter your email">
+            <tooltip>
+                <Tooltip text="Provide a valid email address for account verification and communication." />
+            </tooltip>
+        </TextField>
+
+        <!-- Password Field -->
+        <Label text="Password:" />
+        <PasswordField fx:id="passwordField" promptText="Enter a password">
+            <tooltip>
+                <Tooltip text="Choose a strong password with at least 8 characters, including letters and numbers." />
+            </tooltip>
+        </PasswordField>
+
+        <!-- Confirm Password Field -->
+        <Label text="Confirm Password:" />
+        <PasswordField fx:id="confirmPasswordField" promptText="Confirm your password">
+            <tooltip>
+                <Tooltip text="Re-enter your password to confirm it matches the first one." />
+            </tooltip>
+        </PasswordField>
+
+        <!-- Register Button -->
+        <Button text="Register" onAction="#handleRegister" />
+
+        <!-- Back to Login Hyperlink -->
+        <Hyperlink text="Already have an account? Login" onAction="#goToLogin" />
+    </VBox>
+</VBox>

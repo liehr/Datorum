@@ -14,6 +14,17 @@ import java.util.UUID;
  * This class is responsible for processing the query and interacting with the {@link UserRepository} to fetch the user data
  * from the database. If no user is found for the provided ID, it throws a {@link RuntimeException}.
  * </p>
+ *
+ * <h2>Responsibilities</h2>
+ * <ul>
+ *     <li>Handling the {@link GetUserByIdQuery} query.</li>
+ *     <li>Interacting with the {@link UserRepository} to fetch the user data for a specific user ID.</li>
+ *     <li>Throwing an exception if no user is found for the provided ID.</li>
+ * </ul>
+ *
+ * @see GetUserByIdQuery
+ * @see UserRepository
+ * @see User
  */
 @Component
 public class GetUserByIdQueryHandler implements QueryHandler<GetUserByIdQuery, User> {
@@ -26,7 +37,7 @@ public class GetUserByIdQueryHandler implements QueryHandler<GetUserByIdQuery, U
     /**
      * Constructs a {@code GetUserByIdQueryHandler} with the specified {@link UserRepository}.
      *
-     * @param userRepository the repository for user data.
+     * @param userRepository the repository used to fetch user data from the database.
      */
     public GetUserByIdQueryHandler(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -34,6 +45,9 @@ public class GetUserByIdQueryHandler implements QueryHandler<GetUserByIdQuery, U
 
     /**
      * Handles the {@link GetUserByIdQuery} to fetch the user associated with the provided user ID.
+     *
+     * <p>This method retrieves the user data from the database using the provided user ID. If no user is found
+     * for the provided ID, a {@link RuntimeException} is thrown.</p>
      *
      * @param query the query containing the user ID.
      * @return the {@link User} object corresponding to the user ID.

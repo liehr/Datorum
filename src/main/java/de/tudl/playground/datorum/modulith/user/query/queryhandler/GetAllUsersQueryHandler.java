@@ -9,11 +9,23 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * The {@code GetAllUsersQueryHandler} class handles the {@link GetAllUsersQuery} to retrieve all users in the system.
- * <p>
- * This class is responsible for processing the query and interacting with the {@link UserRepository} to fetch all user data
- * from the database. The results are returned as a list of {@link User} objects.
- * </p>
+ * The {@code GetAllUsersQueryHandler} class is responsible for handling the {@link GetAllUsersQuery}.
+ * It fetches all users from the system by interacting with the {@link UserRepository}.
+ *
+ * <p>This query handler is used to retrieve a complete list of users present in the database. The query handler
+ * processes the incoming query and delegates the actual data retrieval to the {@link UserRepository}. The result is
+ * a list of {@link User} objects.</p>
+ *
+ * <h2>Responsibilities</h2>
+ * <ul>
+ *     <li>Handling the {@link GetAllUsersQuery} query.</li>
+ *     <li>Interacting with the {@link UserRepository} to retrieve all user data from the database.</li>
+ *     <li>Returning the list of {@link User} entities representing all users in the system.</li>
+ * </ul>
+ *
+ * @see GetAllUsersQuery
+ * @see UserRepository
+ * @see User
  */
 @Component
 public class GetAllUsersQueryHandler implements QueryHandler<GetAllUsersQuery, List<User>> {
@@ -26,7 +38,7 @@ public class GetAllUsersQueryHandler implements QueryHandler<GetAllUsersQuery, L
     /**
      * Constructs a {@code GetAllUsersQueryHandler} with the specified {@link UserRepository}.
      *
-     * @param userRepository the repository for user data.
+     * @param userRepository the repository used to fetch user data from the database.
      */
     public GetAllUsersQueryHandler(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -35,7 +47,10 @@ public class GetAllUsersQueryHandler implements QueryHandler<GetAllUsersQuery, L
     /**
      * Handles the {@link GetAllUsersQuery} to fetch all users from the system.
      *
-     * @param query the query requesting all users.
+     * <p>This method processes the incoming {@link GetAllUsersQuery} and retrieves all users from the system
+     * using the {@link UserRepository}. It returns the data as a list of {@link User} objects.</p>
+     *
+     * @param query the query requesting all users in the system.
      * @return a list of {@link User} objects representing all users in the system.
      */
     @Override

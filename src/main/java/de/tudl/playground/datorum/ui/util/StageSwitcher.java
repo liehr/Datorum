@@ -14,7 +14,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class StageSwitcher {
 
-    private static Stage stage;
+    private static Stage stage; // Still static to allow global stage reference
     private final ApplicationContext applicationContext;
 
     public static void setStage(Stage stage) {
@@ -32,9 +32,6 @@ public class StageSwitcher {
             throw new RuntimeException("Error loading FXML: " + fxmlPath, e);
         }
     }
-
-    public static void switchToMainStage() {
-        new StageSwitcher(SpringContext.getApplicationContext()).switchTo("/main.fxml");
-    }
 }
+
 

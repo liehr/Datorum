@@ -1,7 +1,6 @@
 package de.tudl.playground.datorum.ui;
 
 import de.tudl.playground.datorum.ui.event.StageReadyEvent;
-import de.tudl.playground.datorum.ui.service.AuthService;
 import de.tudl.playground.datorum.ui.util.StageSwitcher;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,12 +29,9 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
 
     private final String applicationTitle;
 
-    private final AuthService authService;
-
-    public StageInitializer(ApplicationContext applicationContext, @Value("${spring.application.ui.title}") String applicationTitle, AuthService authService) {
+    public StageInitializer(ApplicationContext applicationContext, @Value("${spring.application.ui.title}") String applicationTitle) {
         this.applicationContext = applicationContext;
         this.applicationTitle = applicationTitle;
-        this.authService = authService;
     }
 
     @Override
@@ -43,12 +39,7 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
         Stage stage = event.getStage();
         StageSwitcher.setStage(stage);
 
-        String token = authService.getToken().orElse(null);
-        if (token == null || !authService.isTokenValid(token)) {
-            loadStage(stage, loginResource);
-        } else {
-            loadStage(stage, mainResource);
-        }
+        loadStage(stage, loginResource);
     }
 
     private void loadStage(Stage stage, Resource resource) {

@@ -12,11 +12,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The {@code UserAggregate} class represents the aggregate root for the user domain.
- * It encapsulates the state and behavior for managing users, including creation, updates,
- * and the application of domain events. The class supports event sourcing by storing
- * changes as a list of domain events.
+ * The {@code UserAggregate} class serves as the aggregate root for the user domain.
+ * It encapsulates all the state and behaviors associated with a user entity,
+ * such as creation, updates, and event application.
+ *
+ * <p>This class is designed to support event sourcing by maintaining a list of domain
+ * events that can be used to reconstruct the aggregate's state. It uses the
+ * {@link EventStore} for handling persisted events.</p>
+ *
+ * <h2>Responsibilities</h2>
+ * <ul>
+ *     <li>Handling user creation and updates via DTOs.</li>
+ *     <li>Raising domain events like {@code UserCreatedEvent} and {@code UserUpdatedEvent}.</li>
+ *     <li>Applying events to update the aggregate's state.</li>
+ *     <li>Rehydrating state from a list of historical events.</li>
+ * </ul>
+ *
+ * <h2>Usage</h2>
+ * <pre>{@code
+ * UserAggregate user = new UserAggregate();
+ * user.createUser(new CreateUserDto(...));
+ * user.updateUser(new UpdateUserDto(...));
+ * List<Object> historicalEvents = loadEventsFromStore();
+ * user.rehydrate(historicalEvents);
+ * }</pre>
+ *
+ * <p>Note: This class assumes that events are persisted in an {@code EventStore}
+ * and provides mechanisms for deserialization and state reconstruction.</p>
+ *
+ * @see de.tudl.playground.datorum.modulith.user.command.events.UserCreatedEvent
+ * @see de.tudl.playground.datorum.modulith.user.command.events.UserUpdatedEvent
+ * @see de.tudl.playground.datorum.modulith.eventstore.EventStore
  */
+
 public class UserAggregate {
 
     /**
@@ -56,11 +84,11 @@ public class UserAggregate {
     private List<Object> changes = new ArrayList<>();
 
     /**
-     * Creates a new user using the provided data transfer object (DTO).
-     * This operation raises a {@code UserCreatedEvent}.
+     * Creates a new user in the aggregate using the provided {@link CreateUserDto}.
+     * This method generates a {@code UserCreatedEvent} to reflect the changes.
      *
-     * @param createDto the DTO containing user creation details.
-     * @throws IllegalArgumentException if the user already exists.
+     * @param createDto the data transfer object containing user creation details.
+     * @throws IllegalArgumentException if the user already exists in the aggregate.
      */
     public void createUser(CreateUserDto createDto) {
         if (this.userId != null) {
@@ -129,10 +157,13 @@ public class UserAggregate {
     }
 
     /**
-     * Rebuilds the aggregate state by applying a list of historical domain events.
+     * Rebuilds the aggregate's state by applying a list of historical events.
+     * Each event is deserialized from its {@link EventStore} representation and
+     * applied to update the current state.
      *
-     * @param events the list of historical domain events to apply.
+     * @param events the list of historical events to process and apply.
      */
+
     public void rehydrate(List<Object> events) {
         // Flatten the events list (extract EventStore from nested structures)
         events.stream()
@@ -143,6 +174,7 @@ public class UserAggregate {
                 .map(EventStore.class::cast)  // Cast to EventStore
                 .forEach(this::processEvent);  // Process each EventStore
     }
+
 
     private void processEvent(EventStore eventStore) {
         // Deserialize and apply the event
@@ -161,6 +193,7 @@ public class UserAggregate {
             throw new RuntimeException("Error processing event: " + eventStore.getEventType(), e);
         }
     }
+
 
     private Object deserializeEvent(String eventType, String eventData) throws Exception {
         return switch (eventType) {

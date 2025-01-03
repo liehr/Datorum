@@ -8,7 +8,7 @@ public class SpringContext {
 
     private static ApplicationContext context;
 
-    public SpringContext(ApplicationContext applicationContext) {
+    private SpringContext(ApplicationContext applicationContext) {
         context = applicationContext;
     }
 

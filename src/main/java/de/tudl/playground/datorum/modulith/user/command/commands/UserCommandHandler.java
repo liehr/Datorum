@@ -12,14 +12,36 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The {@code UserCommandHandler} class handles user-related commands within the application.
- * It coordinates between the command model (user aggregate), the event store for event retrieval,
- * and the event publisher for broadcasting domain events.
- * <p>
- * This class ensures that user-related commands are processed in a consistent manner,
- * applying business logic and triggering domain events when necessary.
- * </p>
+ * The {@code UserCommandHandler} class is a command handler in the CQRS (Command Query Responsibility Segregation) pattern
+ * that processes user-related commands in the application.
+ * It is responsible for coordinating the interactions between the command model (aggregate root),
+ * the event store for storing/retrieving events, and the event publisher for broadcasting domain events.
+ *
+ * <p>This class handles commands such as user creation and updates by applying domain logic
+ * through the {@link UserAggregate}, ensuring consistency and propagating state changes as events.</p>
+ *
+ * <h2>Responsibilities</h2>
+ * <ul>
+ *     <li>Retrieve historical events from the event store to rehydrate aggregates.</li>
+ *     <li>Execute business logic on aggregates based on the incoming commands.</li>
+ *     <li>Publish domain events to notify other parts of the system of state changes.</li>
+ * </ul>
+ *
+ * <h2>Usage</h2>
+ * <pre>{@code
+ * // Assuming commands are dispatched via Spring's event mechanism
+ * CreateUserCommand createUserCommand = new CreateUserCommand(...);
+ * applicationContext.publishEvent(createUserCommand);
+ * }</pre>
+ *
+ * <p>Note: This handler assumes the use of an {@link EventPublisher} for publishing events
+ * and an {@link EventStoreRepository} for retrieving and storing events.</p>
+ *
+ * @see UserAggregate
+ * @see EventPublisher
+ * @see EventStoreRepository
  */
+
 @Service
 public class UserCommandHandler {
 
@@ -47,15 +69,19 @@ public class UserCommandHandler {
     }
 
     /**
-     * Handles the {@link CreateUserCommand}, executing the logic to create a new user.
+     * Handles the {@link CreateUserCommand} by creating a new user.
      * <p>
-     * This method retrieves the existing events for the user aggregate from the event store,
-     * rehydrates the aggregate, applies the command logic, and publishes domain events that
-     * represent changes in the user state.
+     * This method performs the following steps:
+     * <ul>
+     *     <li>Creates a new instance of {@link UserAggregate}.</li>
+     *     <li>Applies the business logic for creating a user by converting the command into a {@link CreateUserDto}.</li>
+     *     <li>Publishes domain events (e.g., {@code UserCreatedEvent}) representing the changes.</li>
+     * </ul>
      * </p>
      *
-     * @param command the command containing the user creation details.
+     * @param command the command containing the details required to create a new user.
      */
+
     @EventListener
     public void handle(CreateUserCommand command) {
         // Create a new user aggregate and rehydrate its state using the retrieved events.
@@ -78,6 +104,21 @@ public class UserCommandHandler {
         }
     }
 
+    /**
+     * Handles the {@link UpdateUserCommand} by updating the details of an existing user.
+     * <p>
+     * This method performs the following steps:
+     * <ul>
+     *     <li>Retrieves historical events for the aggregate from the {@link EventStoreRepository}.</li>
+     *     <li>Rehydrates the {@link UserAggregate} to its current state using the retrieved events.</li>
+     *     <li>Applies the update logic using a {@link UpdateUserDto} created from the command.</li>
+     *     <li>Publishes domain events (e.g., {@code UserUpdatedEvent}) to notify about the changes.</li>
+     * </ul>
+     * </p>
+     *
+     * @param command the command containing the user update details.
+     */
+
     @EventListener
     public void handle(UpdateUserCommand command)
     {
@@ -86,8 +127,7 @@ public class UserCommandHandler {
         // Create a new user aggregate and rehydrate its state using the retrieved events.
         UserAggregate aggregate = new UserAggregate();
 
-        if (events.size() > 0)
-            aggregate.rehydrate(events);
+        aggregate.rehydrate(events);
 
         UpdateUserDto updateDto = new UpdateUserDto(
                 command.getUsername(),
