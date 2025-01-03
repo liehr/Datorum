@@ -2,6 +2,7 @@ package de.tudl.playground.datorum.modulith.user.command.data;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Setter;
 
 import java.util.UUID;
@@ -16,6 +17,7 @@ import java.util.UUID;
  */
 @Entity
 @Setter
+@Table(name = "[user]")
 public class User {
 
     /**

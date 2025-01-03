@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="15" xmlns:fx="http://javafx.com/fxml" stylesheets="@Login.fxml.css" fx:controller="de.tudl.playground.datorum.ui.controller.LoginController">
+    <Label text="Login" styleClass="header-label" />
+    <VBox alignment="CENTER" spacing="10" styleClass="form-container">
+        <TextField fx:id="usernameField" promptText="Username" />
+        <PasswordField fx:id="passwordField" promptText="Passwort" />
+        <Button text="Login" onAction="#handleLogin" />
+        <Hyperlink text="Noch keinen Account? Registrieren" onAction="#goToRegister" />
+    </VBox>
+</VBox>
