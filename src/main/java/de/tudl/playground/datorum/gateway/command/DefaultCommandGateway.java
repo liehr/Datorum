@@ -45,8 +45,10 @@ public class DefaultCommandGateway implements CommandGateway {
      * @param command the command to be sent, typically representing a request for business logic to be executed.
      */
     @Override
-    public void send(Object command) {
-        log.info("Command received: {}", command.getClass().getSimpleName());
+    public void send(Object command)
+    {
+        if (command == null)
+            throw new IllegalArgumentException("Command cannot be null");
 
         // Publish the command as an event to be handled by listeners
         eventPublisher.publishEvent(command);
