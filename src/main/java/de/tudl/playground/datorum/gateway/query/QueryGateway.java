@@ -10,7 +10,6 @@ package de.tudl.playground.datorum.gateway.query;
  * </p>
  */
 public interface QueryGateway {
-
     /**
      * Executes the given query and returns the result.
      * <p>

@@ -10,6 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication(scanBasePackages = "de.tudl.playground.datorum")
 public class FingoApplication extends Application {
+
     private ConfigurableApplicationContext applicationContext;
 
     @Override

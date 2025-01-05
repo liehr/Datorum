@@ -13,7 +13,6 @@ package de.tudl.playground.datorum.gateway.command;
  * </p>
  */
 public interface CommandGateway {
-
     /**
      * Sends a command to the appropriate command handler for processing.
      * <p>

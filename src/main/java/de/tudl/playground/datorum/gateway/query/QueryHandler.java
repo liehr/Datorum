@@ -11,7 +11,6 @@ package de.tudl.playground.datorum.gateway.query;
  * @param <R> the type of the result returned after handling the query.
  */
 public interface QueryHandler<Q, R> {
-
     /**
      * Handles the provided query and returns the result.
      * <p>

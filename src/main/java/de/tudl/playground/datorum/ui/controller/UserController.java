@@ -7,21 +7,18 @@ import de.tudl.playground.datorum.modulith.user.command.commands.UpdateUserComma
 import de.tudl.playground.datorum.modulith.user.command.data.User;
 import de.tudl.playground.datorum.modulith.user.query.queries.GetAllUsersQuery;
 import de.tudl.playground.datorum.modulith.user.query.queries.GetUserByIdQuery;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.util.List;
-import java.util.UUID;
-
 @Controller
-public class UserController
-{
+public class UserController {
+
     private final QueryGateway queryGateway;
     private final CommandGateway commandGateway;
 
-
-    public User getUserById(String uuid)
-    {
+    public User getUserById(String uuid) {
         GetUserByIdQuery query = new GetUserByIdQuery(uuid);
 
         Object user = queryGateway.query(query);
@@ -29,8 +26,7 @@ public class UserController
         return (User) user;
     }
 
-    public List<User> getAllUsers()
-    {
+    public List<User> getAllUsers() {
         GetAllUsersQuery query = new GetAllUsersQuery();
 
         List<User> users = (List<User>) queryGateway.query(query);
@@ -38,8 +34,7 @@ public class UserController
         return users;
     }
 
-    public void createUser()
-    {
+    public void createUser() {
         CreateUserCommand createUserCommand = new CreateUserCommand(
                 UUID.randomUUID().toString(),
                 "My awesome Username",
@@ -51,8 +46,7 @@ public class UserController
         commandGateway.send(createUserCommand);
     }
 
-    public void updateUser(String uuid)
-    {
+    public void updateUser(String uuid) {
         UpdateUserCommand updateUserCommand = new UpdateUserCommand(
                 uuid,
                 "MyTestName",
@@ -65,7 +59,10 @@ public class UserController
     }
 
     @Autowired
-    public UserController(QueryGateway queryGateway, CommandGateway commandGateway) {
+    public UserController(
+            QueryGateway queryGateway,
+            CommandGateway commandGateway
+    ) {
         this.queryGateway = queryGateway;
         this.commandGateway = commandGateway;
     }

@@ -1,9 +1,8 @@
 package de.tudl.playground.datorum.modulith.eventstore;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * Repository interface for accessing and managing events in the event store.
@@ -14,7 +13,6 @@ import java.util.List;
  */
 @Repository
 public interface EventStoreRepository extends JpaRepository<EventStore, Long> {
-
     /**
      * Retrieves all events associated with a given aggregate ID.
      * <p>

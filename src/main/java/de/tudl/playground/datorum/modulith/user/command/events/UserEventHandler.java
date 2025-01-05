@@ -1,11 +1,12 @@
 package de.tudl.playground.datorum.modulith.user.command.events;
 
+import de.tudl.playground.datorum.modulith.auth.command.events.ValidateCredentialsEvent;
+import de.tudl.playground.datorum.modulith.shared.util.HashingUtil;
 import de.tudl.playground.datorum.modulith.user.command.data.User;
 import de.tudl.playground.datorum.modulith.user.command.data.UserRepository;
+import java.util.UUID;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 /**
  * The {@code UserEventHandler} class listens to user-related domain events such as user creation and updates.
@@ -52,8 +53,7 @@ public class UserEventHandler {
      * @param event the {@link UserCreatedEvent} that contains the details of the newly created user.
      */
     @EventListener
-    public void on(UserCreatedEvent event)
-    {
+    public void on(UserCreatedEvent event) {
         User user = new User();
         user.setId(UUID.fromString(event.userId()));
         user.setUsername(event.getUsername());
@@ -73,9 +73,9 @@ public class UserEventHandler {
      * @param event the {@link UserUpdatedEvent} that contains the updated details of the user.
      */
     @EventListener
-    public void on(UserUpdatedEvent event)
-    {
-        User user = userRepository.findById(UUID.fromString(event.userId()))
+    public void on(UserUpdatedEvent event) {
+        User user = userRepository
+                .findById(UUID.fromString(event.userId()))
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         user.setUsername(event.userName());
@@ -84,5 +84,23 @@ public class UserEventHandler {
         user.setRole(event.getRole());
 
         userRepository.save(user);
+    }
+
+    @EventListener
+    public void on(ValidateCredentialsEvent event) {
+        userRepository
+                .findUserByUsername(event.getUsername())
+                .ifPresent(user -> {
+                    boolean isValid = validatePassword(
+                            event.getPassword(),
+                            user.getPasswordHash(),
+                            user.getPasswordSalt()
+                    );
+                    event.setSuccess(isValid);
+                });
+    }
+
+    private boolean validatePassword(String password, String hash, String salt) {
+        return HashingUtil.verifyPassword(password, hash, salt);
     }
 }

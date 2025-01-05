@@ -1,5 +1,6 @@
 package de.tudl.playground.datorum.ui.util;
 
+import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -7,8 +8,6 @@ import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
@@ -33,5 +32,3 @@ public class StageSwitcher {
         }
     }
 }
-
-

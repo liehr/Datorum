@@ -4,9 +4,8 @@ import de.tudl.playground.datorum.gateway.query.QueryHandler;
 import de.tudl.playground.datorum.modulith.user.command.data.User;
 import de.tudl.playground.datorum.modulith.user.command.data.UserRepository;
 import de.tudl.playground.datorum.modulith.user.query.queries.GetAllUsersQuery;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 /**
  * The {@code GetAllUsersQueryHandler} class is responsible for handling the {@link GetAllUsersQuery}.
@@ -28,7 +27,8 @@ import java.util.List;
  * @see User
  */
 @Component
-public class GetAllUsersQueryHandler implements QueryHandler<GetAllUsersQuery, List<User>> {
+public class GetAllUsersQueryHandler
+        implements QueryHandler<GetAllUsersQuery, List<User>> {
 
     /**
      * The {@link UserRepository} used to retrieve user data from the database.

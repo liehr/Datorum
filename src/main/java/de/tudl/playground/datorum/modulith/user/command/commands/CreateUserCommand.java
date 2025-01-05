@@ -53,7 +53,13 @@ public class CreateUserCommand extends ApplicationEvent {
      * @param passwordSalt The cryptographic salt used for hashing the password.
      * @param role        The role assigned to the user.
      */
-    public CreateUserCommand(String userId, String username, String passwordHash, String passwordSalt, String role) {
+    public CreateUserCommand(
+            String userId,
+            String username,
+            String passwordHash,
+            String passwordSalt,
+            String role
+    ) {
         super(userId);
         this.userId = userId;
         this.username = username;
@@ -61,5 +67,4 @@ public class CreateUserCommand extends ApplicationEvent {
         this.passwordSalt = passwordSalt;
         this.role = role;
     }
-
 }

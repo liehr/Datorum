@@ -20,5 +20,5 @@ public record UserCreatedEvent(
         @Getter String username,
         @Getter String passwordHash,
         @Getter String passwordSalt,
-        @Getter String role) {
-}
+        @Getter String role
+) {}

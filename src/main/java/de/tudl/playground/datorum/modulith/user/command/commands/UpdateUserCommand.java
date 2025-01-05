@@ -6,8 +6,8 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class UpdateUserCommand extends ApplicationEvent
-{
+public class UpdateUserCommand extends ApplicationEvent {
+
     /**
      * The unique identifier for the user.
      * This ID should be unique across the system to prevent conflicts.
@@ -47,7 +47,13 @@ public class UpdateUserCommand extends ApplicationEvent
      * @param passwordSalt The cryptographic salt used for hashing the password.
      * @param role        The role assigned to the user.
      */
-    public UpdateUserCommand(String userId, String username, String passwordHash, String passwordSalt, String role) {
+    public UpdateUserCommand(
+            String userId,
+            String username,
+            String passwordHash,
+            String passwordSalt,
+            String role
+    ) {
         super(userId);
         this.userId = userId;
         this.username = username;

@@ -7,41 +7,33 @@
 
     <VBox alignment="CENTER" spacing="10" styleClass="form-container">
         <!-- Username Field -->
-        <Label text="Username:" />
-        <TextField fx:id="usernameField" promptText="Choose a username">
+        <Label text="Benutzername:" />
+        <TextField fx:id="usernameField" promptText="Wähle deinen Benutzernamen">
             <tooltip>
-                <Tooltip text="Enter a unique username. This is typically your email or a unique identifier." />
-            </tooltip>
-        </TextField>
-
-        <!-- Email Field -->
-        <Label text="Email:" />
-        <TextField fx:id="emailField" promptText="Enter your email">
-            <tooltip>
-                <Tooltip text="Provide a valid email address for account verification and communication." />
+                <Tooltip text="Geben Sie einen eindeutigen Benutzernamen ein. Das ist meistens deine E-Mail-Adresse oder eine eindeutige Kennung." />
             </tooltip>
         </TextField>
 
         <!-- Password Field -->
-        <Label text="Password:" />
-        <PasswordField fx:id="passwordField" promptText="Enter a password">
+        <Label text="Passwort:" />
+        <PasswordField fx:id="passwordField" promptText="Gib dein Passwort ein.">
             <tooltip>
-                <Tooltip text="Choose a strong password with at least 8 characters, including letters and numbers." />
+                <Tooltip text="Wähle ein sicheres Passwort mit mindestens 8 Zeichen, einschließlich Buchstaben und Zahlen." />
             </tooltip>
         </PasswordField>
 
         <!-- Confirm Password Field -->
-        <Label text="Confirm Password:" />
-        <PasswordField fx:id="confirmPasswordField" promptText="Confirm your password">
+        <Label text="Passwort bestätigen:" />
+        <PasswordField fx:id="confirmPasswordField" promptText="Bestätige dein Passwort">
             <tooltip>
-                <Tooltip text="Re-enter your password to confirm it matches the first one." />
+                <Tooltip text="Gebe dein Passwort erneut ein." />
             </tooltip>
         </PasswordField>
 
         <!-- Register Button -->
-        <Button text="Register" onAction="#handleRegister" />
+        <Button text="Registrieren" onAction="#handleRegister" />
 
         <!-- Back to Login Hyperlink -->
-        <Hyperlink text="Already have an account? Login" onAction="#goToLogin" />
+        <Hyperlink text="Hast du schon ein Konto? Dann melde dich an." onAction="#goToLogin" />
     </VBox>
 </VBox>

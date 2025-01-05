@@ -7,18 +7,18 @@
 
     <VBox alignment="CENTER" spacing="10" styleClass="form-container">
         <!-- Username Field -->
-        <Label text="Username:" />
-        <TextField fx:id="usernameField" promptText="Enter your username">
+        <Label text="Benutzername:" />
+        <TextField fx:id="usernameField" promptText="Gib deinen Benutzernamen ein">
             <tooltip>
-                <Tooltip text="Please provide your username. This is typically your email or a unique identifier." />
+                <Tooltip text="Bitte Benutzernamen angeben." />
             </tooltip>
         </TextField>
 
         <!-- Password Field -->
-        <Label text="Password:" />
-        <PasswordField fx:id="passwordField" promptText="Enter your password">
+        <Label text="Passwort:" />
+        <PasswordField fx:id="passwordField" promptText="Gib dein Passwort ein.">
             <tooltip>
-                <Tooltip text="Please provide your password. Make sure it is secure and confidential." />
+                <Tooltip text="Bitte Passwort angeben." />
             </tooltip>
         </PasswordField>
 
@@ -26,6 +26,6 @@
         <Button text="Login" onAction="#handleLogin" />
 
         <!-- Register Hyperlink -->
-        <Hyperlink text="Noch keinen Account? Registrieren" onAction="#goToRegister" />
+        <Hyperlink text="Noch keinen Account? Registrieren!" onAction="#goToRegister" />
     </VBox>
 </VBox>

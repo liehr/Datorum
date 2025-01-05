@@ -15,5 +15,5 @@ public record CreateUserDto(
         String userName,
         String passwordHash,
         String passwordSalt,
-        String role) {
-}
+        String role
+) {}

@@ -3,9 +3,9 @@ package de.tudl.playground.datorum.modulith.user.command.data;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Setter;
-
 import java.util.UUID;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Represents a user in the system.
@@ -16,6 +16,7 @@ import java.util.UUID;
  * </p>
  */
 @Entity
+@Getter
 @Setter
 @Table(name = "[user]")
 public class User {
@@ -53,12 +54,23 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", passwordHash='" + passwordHash + '\'' +
-                ", passwordSalt='" + passwordSalt + '\'' +
-                ", role='" + role + '\'' +
-                '}';
+        return (
+                "User{" +
+                        "id=" +
+                        id +
+                        ", username='" +
+                        username +
+                        '\'' +
+                        ", passwordHash='" +
+                        passwordHash +
+                        '\'' +
+                        ", passwordSalt='" +
+                        passwordSalt +
+                        '\'' +
+                        ", role='" +
+                        role +
+                        '\'' +
+                        '}'
+        );
     }
 }

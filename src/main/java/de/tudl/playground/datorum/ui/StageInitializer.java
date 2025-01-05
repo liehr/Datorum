@@ -3,6 +3,7 @@ package de.tudl.playground.datorum.ui;
 import de.tudl.playground.datorum.ui.event.StageReadyEvent;
 import de.tudl.playground.datorum.ui.exception.ResourceNotFoundException;
 import de.tudl.playground.datorum.ui.util.StageSwitcher;
+import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,8 +15,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 @Slf4j
 @Component
@@ -31,7 +30,10 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
 
     private final String applicationTitle;
 
-    public StageInitializer(ApplicationContext applicationContext, @Value("${spring.application.ui.title}") String applicationTitle) {
+    public StageInitializer(
+            ApplicationContext applicationContext,
+            @Value("${spring.application.ui.title}") String applicationTitle
+    ) {
         this.applicationContext = applicationContext;
         this.applicationTitle = applicationTitle;
     }

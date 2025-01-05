@@ -20,5 +20,5 @@ public record UserUpdatedEvent(
         @Getter String userName,
         @Getter String passwordHash,
         @Getter String passwordSalt,
-        @Getter String role) {
-}
+        @Getter String role
+) {}

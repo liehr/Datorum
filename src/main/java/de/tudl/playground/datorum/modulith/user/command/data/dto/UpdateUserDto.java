@@ -13,5 +13,5 @@ public record UpdateUserDto(
         String userName,
         String passwordHash,
         String passwordSalt,
-        String role) {
-}
+        String role
+) {}

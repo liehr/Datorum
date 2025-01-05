@@ -1,20 +1,19 @@
 package de.tudl.playground.datorum.gateway;
 
-import de.tudl.playground.datorum.gateway.command.DefaultCommandGateway;
-import org.junit.jupiter.api.BeforeEach;
-
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import de.tudl.playground.datorum.gateway.command.DefaultCommandGateway;
+import java.time.Duration;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.*;
 import org.springframework.context.ApplicationEventPublisher;
-
-import java.time.Duration;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DefaultCommandGatewayTests {
@@ -24,10 +23,19 @@ class DefaultCommandGatewayTests {
 
     private DefaultCommandGateway commandGateway;
 
+    private AutoCloseable closeable;
+
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
         commandGateway = new DefaultCommandGateway(eventPublisher);
+    }
+
+    @AfterEach
+    public void tearDown() throws Exception {
+        if (closeable != null) {
+            closeable.close();
+        }
     }
 
     @Test
@@ -41,7 +49,8 @@ class DefaultCommandGatewayTests {
 
     @Test
     void testSendWithNullCommand() {
-        assertThrows(IllegalArgumentException.class, () -> commandGateway.send(null));
+        assertThrows(IllegalArgumentException.class, () -> commandGateway.send(null)
+        );
     }
 
     @Test
@@ -55,7 +64,7 @@ class DefaultCommandGatewayTests {
     @Test
     void testSendWithLargeCommand() {
         StringBuilder largePayload = new StringBuilder();
-        largePayload.append("data".repeat(1_000_000));
+        largePayload.append("data".repeat(10_000_000));
         Object largeCommand = new String(largePayload);
 
         commandGateway.send(largeCommand);
@@ -83,7 +92,9 @@ class DefaultCommandGatewayTests {
 
     @Test
     void testSendCommandWithPublisherException() {
-        doThrow(new RuntimeException("Publisher Error")).when(eventPublisher).publishEvent(any());
+        doThrow(new RuntimeException("Publisher Error"))
+                .when(eventPublisher)
+                .publishEvent(any());
 
         Object command = new Object();
 
@@ -102,8 +113,7 @@ class DefaultCommandGatewayTests {
 
     @Test
     void testSendWithCustomCommand() {
-        class CustomCommand {
-        }
+        class CustomCommand {}
 
         Object customCommand = new CustomCommand();
 
@@ -111,7 +121,4 @@ class DefaultCommandGatewayTests {
 
         verify(eventPublisher, times(1)).publishEvent(customCommand);
     }
-
-
 }
-

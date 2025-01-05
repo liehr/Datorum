@@ -1,11 +1,10 @@
 package de.tudl.playground.datorum.gateway.query;
 
+import java.lang.reflect.ParameterizedType;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-
-import java.lang.reflect.ParameterizedType;
-import java.util.Map;
 
 /**
  * The {@code DefaultQueryGateway} is the implementation of the {@link QueryGateway} interface that
@@ -38,9 +37,15 @@ public class DefaultQueryGateway implements QueryGateway {
         this.applicationContext = applicationContext;
 
         // Log all the registered handlers at startup
-        applicationContext.getBeansOfType(QueryHandler.class).forEach((name, handler) ->
-                log.info("Registered handler: {} -> {}", name, handler.getClass().getName())
-        );
+        applicationContext
+                .getBeansOfType(QueryHandler.class)
+                .forEach((name, handler) ->
+                        log.info(
+                                "Registered handler: {} -> {}",
+                                name,
+                                handler.getClass().getName()
+                        )
+                );
     }
 
     /**
@@ -61,13 +66,19 @@ public class DefaultQueryGateway implements QueryGateway {
         Class<?> queryType = query.getClass();
 
         // Get all the registered QueryHandler beans from the application context
-        Map<String, QueryHandler> handlers = applicationContext.getBeansOfType(QueryHandler.class);
+        Map<String, QueryHandler> handlers = applicationContext.getBeansOfType(
+                QueryHandler.class
+        );
 
         // Loop through each handler to find the one that matches the query type
         for (QueryHandler handler : handlers.values()) {
             // Get the actual generic type of the handler's QueryHandler interface
-            ParameterizedType parameterizedType = (ParameterizedType) handler.getClass().getGenericInterfaces()[0];
-            Class<?> handlerQueryType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+            ParameterizedType parameterizedType = (ParameterizedType) handler
+                    .getClass()
+                    .getGenericInterfaces()[0];
+            Class<?> handlerQueryType = (Class<
+                    ?
+                    >) parameterizedType.getActualTypeArguments()[0];
 
             // Check if the handler's query type matches the query passed in
             if (handlerQueryType.isAssignableFrom(queryType)) {
@@ -77,6 +88,8 @@ public class DefaultQueryGateway implements QueryGateway {
         }
 
         // If no matching handler is found, throw an exception
-        throw new IllegalArgumentException("No handler found for query type: " + queryType.getName());
+        throw new IllegalArgumentException(
+                "No handler found for query type: " + queryType.getName()
+        );
     }
 }
