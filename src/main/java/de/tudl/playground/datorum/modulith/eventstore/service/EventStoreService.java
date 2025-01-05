@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.tudl.playground.datorum.modulith.eventstore.EventStore;
 import de.tudl.playground.datorum.modulith.eventstore.EventStoreRepository;
 import java.time.LocalDateTime;
+
+import de.tudl.playground.datorum.modulith.eventstore.exception.FailedToSaveEventException;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 /**
@@ -62,6 +65,7 @@ public class EventStoreService {
      * @param event the event object to be persisted. The object must be serializable into JSON format.
      * @throws RuntimeException if an error occurs while serializing the event or saving it to the repository.
      */
+    @SneakyThrows
     public void saveEvent(String aggregateId, Object event) {
         try {
             EventStore eventStore = new EventStore();
@@ -72,7 +76,7 @@ public class EventStoreService {
 
             eventStoreRepository.save(eventStore);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to save event to Event Store", e);
+            throw new FailedToSaveEventException("Failed to save event to Event Store", e);
         }
     }
 }

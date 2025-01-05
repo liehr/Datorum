@@ -29,9 +29,7 @@ public class UserController {
     public List<User> getAllUsers() {
         GetAllUsersQuery query = new GetAllUsersQuery();
 
-        List<User> users = (List<User>) queryGateway.query(query);
-
-        return users;
+        return (List<User>) queryGateway.query(query);
     }
 
     public void createUser() {

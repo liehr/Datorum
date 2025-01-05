@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.tudl.playground.datorum.modulith.auth.command.data.dto.LoginUserDto;
 import de.tudl.playground.datorum.modulith.auth.command.events.LoginFailedEvent;
 import de.tudl.playground.datorum.modulith.auth.command.events.LoginSuccessfulEvent;
+import de.tudl.playground.datorum.modulith.shared.exception.ErrorProcessingEventException;
 import de.tudl.playground.datorum.modulith.eventstore.EventStore;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
+import lombok.SneakyThrows;
 
 @Getter
 public class AuthAggregate {
@@ -68,6 +70,7 @@ public class AuthAggregate {
                 .forEach(this::processEvent);
     }
 
+    @SneakyThrows
     private void processEvent(EventStore eventStore) {
         try {
             String eventType = eventStore.getEventType();
@@ -80,15 +83,15 @@ public class AuthAggregate {
                     "Unknow event type: " + eventType
             );
         } catch (Exception e) {
-            throw new RuntimeException(
+            throw new ErrorProcessingEventException(
                     "Error processing event: " + eventStore.getEventType(),
                     e
             );
         }
     }
 
-    private Object deserializeEvent(String eventType, String eventData)
-            throws Exception {
+    @SneakyThrows
+    private Object deserializeEvent(String eventType, String eventData) {
         return switch (eventType) {
             case "LoginSuccessfulEvent" -> new ObjectMapper()
                     .readValue(eventData, LoginSuccessfulEvent.class);

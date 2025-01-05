@@ -1,6 +1,6 @@
 package de.tudl.playground.datorum.modulith.eventstore;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import de.tudl.playground.datorum.modulith.eventstore.exception.ErrorInvokingAggregateException;
 import de.tudl.playground.datorum.modulith.eventstore.service.EventPublishingService;
 import de.tudl.playground.datorum.modulith.eventstore.service.EventStoreService;
 import java.lang.reflect.Method;
@@ -102,12 +102,13 @@ public class EventPublisher {
      * @throws RuntimeException if no method with the {@link AggregateId} annotation is found or if
      *                          invoking the method fails.
      */
+    @SneakyThrows
     private String extractAggregateId(Object event) {
         Method aggregateIdMethod = findAggregateIdMethod(event.getClass());
         try {
             return (String) aggregateIdMethod.invoke(event);
         } catch (Exception e) {
-            throw new RuntimeException(
+            throw new ErrorInvokingAggregateException(
                     "Error invoking @AggregateId method on event: " +
                             event.getClass().getName(),
                     e

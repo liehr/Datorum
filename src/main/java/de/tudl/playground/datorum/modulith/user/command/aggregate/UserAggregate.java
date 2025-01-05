@@ -2,6 +2,7 @@ package de.tudl.playground.datorum.modulith.user.command.aggregate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.tudl.playground.datorum.modulith.eventstore.EventStore;
+import de.tudl.playground.datorum.modulith.shared.exception.ErrorProcessingEventException;
 import de.tudl.playground.datorum.modulith.user.command.data.dto.CreateUserDto;
 import de.tudl.playground.datorum.modulith.user.command.data.dto.UpdateUserDto;
 import de.tudl.playground.datorum.modulith.user.command.events.UserCreatedEvent;
@@ -9,6 +10,7 @@ import de.tudl.playground.datorum.modulith.user.command.events.UserUpdatedEvent;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
+import lombok.SneakyThrows;
 
 /**
  * The {@code UserAggregate} class serves as the aggregate root for the user domain.
@@ -160,6 +162,7 @@ public class UserAggregate {
                 .forEach(this::processEvent); // Process each EventStore
     }
 
+    @SneakyThrows
     private void processEvent(EventStore eventStore) {
         // Deserialize and apply the event
         try {
@@ -174,15 +177,15 @@ public class UserAggregate {
                 throw new IllegalArgumentException("Unknown event type: " + eventType);
             }
         } catch (Exception e) {
-            throw new RuntimeException(
+            throw new ErrorProcessingEventException(
                     "Error processing event: " + eventStore.getEventType(),
                     e
             );
         }
     }
 
-    private Object deserializeEvent(String eventType, String eventData)
-            throws Exception {
+    @SneakyThrows
+    private Object deserializeEvent(String eventType, String eventData) {
         return switch (eventType) {
             case "UserCreatedEvent" -> new ObjectMapper()
                     .readValue(eventData, UserCreatedEvent.class);

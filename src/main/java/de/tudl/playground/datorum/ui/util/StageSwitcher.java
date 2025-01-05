@@ -1,11 +1,14 @@
 package de.tudl.playground.datorum.ui.util;
 
 import java.io.IOException;
+
+import de.tudl.playground.datorum.ui.exception.ResourceNotFoundException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +23,7 @@ public class StageSwitcher {
         StageSwitcher.stage = stage;
     }
 
+    @SneakyThrows
     public void switchTo(String fxmlPath) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -28,7 +32,7 @@ public class StageSwitcher {
             stage.setScene(new Scene(parent));
             stage.show();
         } catch (IOException e) {
-            throw new RuntimeException("Error loading FXML: " + fxmlPath, e);
+            throw new ResourceNotFoundException("Error loading FXML: " + fxmlPath, e);
         }
     }
 }

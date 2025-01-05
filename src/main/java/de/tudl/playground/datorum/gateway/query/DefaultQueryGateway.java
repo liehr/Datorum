@@ -3,6 +3,7 @@ package de.tudl.playground.datorum.gateway.query;
 import java.lang.reflect.ParameterizedType;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
@@ -66,12 +67,12 @@ public class DefaultQueryGateway implements QueryGateway {
         Class<?> queryType = query.getClass();
 
         // Get all the registered QueryHandler beans from the application context
-        Map<String, QueryHandler> handlers = applicationContext.getBeansOfType(
+        var handlers = applicationContext.getBeansOfType(
                 QueryHandler.class
         );
 
         // Loop through each handler to find the one that matches the query type
-        for (QueryHandler handler : handlers.values()) {
+        for (val handler : handlers.values()) {
             // Get the actual generic type of the handler's QueryHandler interface
             ParameterizedType parameterizedType = (ParameterizedType) handler
                     .getClass()
