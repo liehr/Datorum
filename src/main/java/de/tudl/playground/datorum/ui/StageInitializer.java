@@ -1,11 +1,13 @@
 package de.tudl.playground.datorum.ui;
 
 import de.tudl.playground.datorum.ui.event.StageReadyEvent;
+import de.tudl.playground.datorum.ui.exception.ResourceNotFoundException;
 import de.tudl.playground.datorum.ui.util.StageSwitcher;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -42,6 +44,7 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
         loadStage(stage, loginResource);
     }
 
+    @SneakyThrows
     private void loadStage(Stage stage, Resource resource) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(resource.getURL());
@@ -51,7 +54,7 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
             stage.setTitle(applicationTitle);
             stage.show();
         } catch (IOException e) {
-            throw new RuntimeException("Cannot load FXML", e);
+            throw new ResourceNotFoundException("Cannot load FXML", e);
         }
     }
 }
