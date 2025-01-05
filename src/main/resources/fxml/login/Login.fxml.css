@@ -1,0 +1,73 @@
+/* Allgemeine Stile */
+.root {
+    -fx-font-family: "Arial";
+    -fx-background-color: #f4f4f9;
+}
+
+/* Header Label */
+.header-label {
+    -fx-font-size: 24px;
+    -fx-text-fill: #333;
+    -fx-padding: 10;
+    -fx-text-alignment: center;
+}
+
+/* Formular Container */
+.form-container {
+    -fx-padding: 20;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-max-width: 400px;
+    -fx-min-width: 300px;
+    -fx-alignment: center;
+}
+
+/* Eingabefelder */
+.text-field, .password-field {
+    -fx-pref-width: 100%;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-padding: 8;
+}
+
+/* Buttons */
+.button {
+    -fx-background-color: #0078d7;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-padding: 10;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-min-width: 100px;
+    -fx-max-width: 100%;
+}
+
+.button:hover {
+    -fx-background-color: #005bb5;
+}
+
+.button:pressed {
+    -fx-background-color: #004494;
+}
+
+/* Labels */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555;
+    -fx-padding: 5 0 2 0;
+}
+
+/* Tooltips */
+.tooltip {
+    -fx-background-color: #fefefe;
+    -fx-text-fill: #333;
+    -fx-font-size: 12px;
+    -fx-padding: 5;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+}

@@ -16,11 +16,9 @@ public class DatorumApplication {
     private static ConfigurableApplicationContext applicationContext;
 
     public static void main(String[] args) {
-
         // Start the Spring context
         applicationContext = SpringApplication.run(DatorumApplication.class, args);
         // Launch the JavaFX application
         Application.launch(FingoApplication.class, args);
     }
-
 }

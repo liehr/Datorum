@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="15" xmlns:fx="http://javafx.com/fxml" stylesheets="@Register.fxml.css" fx:controller="de.tudl.playground.datorum.ui.controller.RegisterController" prefWidth="1280.0" prefHeight="720.0">
+    <Label text="Register" styleClass="header-label" />
+
+    <VBox alignment="CENTER" spacing="10" styleClass="form-container">
+        <!-- Username Field -->
+        <Label text="Benutzername:" />
+        <TextField fx:id="usernameField" promptText="Wähle deinen Benutzernamen">
+            <tooltip>
+                <Tooltip text="Geben Sie einen eindeutigen Benutzernamen ein. Das ist meistens deine E-Mail-Adresse oder eine eindeutige Kennung." />
+            </tooltip>
+        </TextField>
+
+        <!-- Password Field -->
+        <Label text="Passwort:" />
+        <PasswordField fx:id="passwordField" promptText="Gib dein Passwort ein.">
+            <tooltip>
+                <Tooltip text="Wähle ein sicheres Passwort mit mindestens 8 Zeichen, einschließlich Buchstaben und Zahlen." />
+            </tooltip>
+        </PasswordField>
+
+        <!-- Confirm Password Field -->
+        <Label text="Passwort bestätigen:" />
+        <PasswordField fx:id="confirmPasswordField" promptText="Bestätige dein Passwort">
+            <tooltip>
+                <Tooltip text="Gebe dein Passwort erneut ein." />
+            </tooltip>
+        </PasswordField>
+
+        <!-- Register Button -->
+        <Button text="Registrieren" onAction="#handleRegister" />
+
+        <!-- Back to Login Hyperlink -->
+        <Hyperlink text="Hast du schon ein Konto? Dann melde dich an." onAction="#goToLogin" />
+    </VBox>
+</VBox>
