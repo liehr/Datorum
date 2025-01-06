@@ -16,7 +16,7 @@
 
         <!-- Password Field -->
         <Label text="Passwort:" />
-        <PasswordField fx:id="passwordField" promptText="Gib dein Passwort ein.">
+        <PasswordField fx:id="passwordField" promptText="Gib dein Passwort ein">
             <tooltip>
                 <Tooltip text="Wähle ein sicheres Passwort mit mindestens 8 Zeichen, einschließlich Buchstaben und Zahlen." />
             </tooltip>
@@ -34,6 +34,6 @@
         <Button text="Registrieren" onAction="#handleRegister" />
 
         <!-- Back to Login Hyperlink -->
-        <Hyperlink text="Hast du schon ein Konto? Dann melde dich an." onAction="#goToLogin" />
+        <Hyperlink text="Hast du schon ein Konto? Dann melde dich an!" onAction="#goToLogin" />
     </VBox>
 </VBox>

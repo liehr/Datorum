@@ -16,14 +16,14 @@
 
         <!-- Password Field -->
         <Label text="Passwort:" />
-        <PasswordField fx:id="passwordField" promptText="Gib dein Passwort ein.">
+        <PasswordField fx:id="passwordField" promptText="Gib dein Passwort ein">
             <tooltip>
                 <Tooltip text="Bitte Passwort angeben." />
             </tooltip>
         </PasswordField>
 
         <!-- Login Button -->
-        <Button text="Login" onAction="#handleLogin" />
+        <Button text="Anmelden" onAction="#handleLogin" />
 
         <!-- Register Hyperlink -->
         <Hyperlink text="Noch keinen Account? Registrieren!" onAction="#goToRegister" />
