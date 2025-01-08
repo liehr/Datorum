@@ -62,29 +62,27 @@ public class DefaultQueryGateway implements QueryGateway {
      * @throws IllegalArgumentException if no handler is found for the query type.
      */
     @Override
-    public <R> R query(Object query) {
+    public <Q, R> R query(Q query) {
         // Get the query's class type
         Class<?> queryType = query.getClass();
 
         // Get all the registered QueryHandler beans from the application context
-        var handlers = applicationContext.getBeansOfType(
-                QueryHandler.class
-        );
+        var handlers = applicationContext.getBeansOfType(QueryHandler.class);
 
         // Loop through each handler to find the one that matches the query type
-        for (val handler : handlers.values()) {
+        for (QueryHandler<?, ?> handler : handlers.values()) {
             // Get the actual generic type of the handler's QueryHandler interface
             ParameterizedType parameterizedType = (ParameterizedType) handler
                     .getClass()
                     .getGenericInterfaces()[0];
-            Class<?> handlerQueryType = (Class<
-                    ?
-                    >) parameterizedType.getActualTypeArguments()[0];
+            Class<?> handlerQueryType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 
             // Check if the handler's query type matches the query passed in
             if (handlerQueryType.isAssignableFrom(queryType)) {
                 // Safely handle the query using the matched handler
-                return (R) handler.handle(query);
+                QueryHandler<Q, R> typedHandler = (QueryHandler<Q, R>) handler;
+
+                return (R) typedHandler.handle(query);
             }
         }
 
@@ -93,4 +91,5 @@ public class DefaultQueryGateway implements QueryGateway {
                 "No handler found for query type: " + queryType.getName()
         );
     }
+
 }

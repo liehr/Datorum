@@ -29,7 +29,7 @@ public class UserController {
     public List<User> getAllUsers() {
         GetAllUsersQuery query = new GetAllUsersQuery();
 
-        return (List<User>) queryGateway.query(query);
+        return queryGateway.query(query);
     }
 
     public void createUser() {
@@ -45,15 +45,7 @@ public class UserController {
     }
 
     public void updateUser(String uuid) {
-        UpdateUserCommand updateUserCommand = new UpdateUserCommand(
-                uuid,
-                "MyTestName",
-                "Test",
-                "Blablabla",
-                "AWESOMECLASS"
-        );
 
-        commandGateway.send(updateUserCommand);
     }
 
     @Autowired

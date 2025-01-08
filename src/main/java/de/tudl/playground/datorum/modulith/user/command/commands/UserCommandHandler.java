@@ -1,7 +1,9 @@
 package de.tudl.playground.datorum.modulith.user.command.commands;
 
 import de.tudl.playground.datorum.modulith.eventstore.EventPublisher;
+import de.tudl.playground.datorum.modulith.eventstore.EventStore;
 import de.tudl.playground.datorum.modulith.eventstore.EventStoreRepository;
+import de.tudl.playground.datorum.modulith.eventstore.service.EventProcessorService;
 import de.tudl.playground.datorum.modulith.user.command.aggregate.UserAggregate;
 import de.tudl.playground.datorum.modulith.user.command.data.dto.CreateUserDto;
 import de.tudl.playground.datorum.modulith.user.command.data.dto.UpdateUserDto;
@@ -48,6 +50,8 @@ public class UserCommandHandler {
 
     private final EventPublisher eventPublisher;
 
+    private final EventProcessorService eventProcessorService;
+
     /**
      * Constructs a {@code UserCommandHandler} with the specified event store repository and event publisher.
      *
@@ -56,10 +60,11 @@ public class UserCommandHandler {
      */
     public UserCommandHandler(
             EventStoreRepository eventStoreRepository,
-            EventPublisher eventPublisher
+            EventPublisher eventPublisher, EventProcessorService eventProcessorService
     ) {
         this.eventStoreRepository = eventStoreRepository;
         this.eventPublisher = eventPublisher;
+        this.eventProcessorService = eventProcessorService;
     }
 
     /**
@@ -79,7 +84,7 @@ public class UserCommandHandler {
     @EventListener
     public void handle(CreateUserCommand command) {
         // Create a new user aggregate and rehydrate its state using the retrieved events.
-        UserAggregate aggregate = new UserAggregate();
+        UserAggregate aggregate = new UserAggregate(eventProcessorService);
 
         // Convert the command into a DTO to apply the business logic.
         CreateUserDto createDto = new CreateUserDto(
@@ -115,12 +120,10 @@ public class UserCommandHandler {
      */
     @EventListener
     public void handle(UpdateUserCommand command) {
-        List<Object> events = Collections.singletonList(
-                eventStoreRepository.findByAggregateId(command.getUserId())
-        );
+        List<EventStore> events = eventStoreRepository.findByAggregateId(command.getUserId());
 
         // Create a new user aggregate and rehydrate its state using the retrieved events.
-        UserAggregate aggregate = new UserAggregate();
+        UserAggregate aggregate = new UserAggregate(eventProcessorService);
 
         aggregate.rehydrate(events);
 

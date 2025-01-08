@@ -4,6 +4,7 @@ import de.tudl.playground.datorum.gateway.command.CommandGateway;
 import de.tudl.playground.datorum.modulith.auth.command.commands.LoginUserCommand;
 import de.tudl.playground.datorum.modulith.auth.command.events.LoginFailedEvent;
 import de.tudl.playground.datorum.modulith.auth.command.events.LoginSuccessfulEvent;
+import de.tudl.playground.datorum.modulith.user.command.commands.UpdateUserCommand;
 import de.tudl.playground.datorum.ui.util.StageSwitcher;
 import de.tudl.playground.datorum.ui.view.MainView;
 import de.tudl.playground.datorum.ui.view.RegisterView;
@@ -31,6 +32,16 @@ public class LoginController {
 
         LoginUserCommand loginUserCommand = new LoginUserCommand(username, password);
         commandGateway.send(loginUserCommand);
+
+        UpdateUserCommand updateUserCommand = new UpdateUserCommand(
+                "72e564a6-fc3f-47ec-a076-4146125c0699",
+                "MyTestName",
+                "Test",
+                "Blablabla",
+                "AWESOMECLASS"
+        );
+
+        commandGateway.send(updateUserCommand);
     }
 
     @EventListener

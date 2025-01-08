@@ -18,8 +18,10 @@ public interface QueryGateway {
      * </p>
      *
      * @param query the query object that needs to be processed.
+     * @param <Q> the type of the query being processed.
      * @param <R> the type of the result returned by the query handler.
      * @return the result of the query processing.
      */
-    <R> R query(Object query);
+    <Q, R> R query(Q query);
 }
+

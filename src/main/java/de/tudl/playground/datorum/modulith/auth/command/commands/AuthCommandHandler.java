@@ -6,16 +6,16 @@ import de.tudl.playground.datorum.modulith.auth.command.data.dto.LoginUserDto;
 import de.tudl.playground.datorum.modulith.auth.command.events.LoginFailedEvent;
 import de.tudl.playground.datorum.modulith.eventstore.EventPublisher;
 import de.tudl.playground.datorum.modulith.eventstore.EventStoreRepository;
+import de.tudl.playground.datorum.modulith.eventstore.service.EventProcessorService;
 import de.tudl.playground.datorum.modulith.shared.util.HashingUtil;
 import de.tudl.playground.datorum.modulith.user.command.data.User;
 import de.tudl.playground.datorum.modulith.user.query.queries.GetUserByUsername;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 /**
  * The {@code AuthCommandHandler} class is responsible for handling authentication-related commands
@@ -64,6 +64,8 @@ public class AuthCommandHandler {
 
     private final QueryGateway queryGateway;
 
+    private final EventProcessorService eventProcessorService;
+
     /**
      * Constructs an {@code AuthCommandHandler} with the required dependencies.
      *
@@ -75,12 +77,14 @@ public class AuthCommandHandler {
     public AuthCommandHandler(
             EventStoreRepository eventStoreRepository,
             ApplicationEventPublisher eventPublisher,
-            EventPublisher eventPublisher1, QueryGateway queryGateway
+            EventPublisher eventPublisher1,
+            QueryGateway queryGateway, EventProcessorService eventProcessorService
     ) {
         this.eventStoreRepository = eventStoreRepository;
         this.applicationEventPublisher = eventPublisher;
         this.eventPublisher = eventPublisher1;
         this.queryGateway = queryGateway;
+        this.eventProcessorService = eventProcessorService;
     }
 
     /**
@@ -94,14 +98,12 @@ public class AuthCommandHandler {
      *
      * @param command the login command containing the username and password.
      */
-
     @EventListener
     public void handle(LoginUserCommand command) {
-        Optional<User> optionalUser = queryGateway.query(new GetUserByUsername(command.getUsername()));
+        Optional<User> optionalUser = fetchUser(command.getUsername());
 
         if (optionalUser.isEmpty()) {
-            log.warn("User {} not found during login attempt!", command.getUsername());
-            applicationEventPublisher.publishEvent(new LoginFailedEvent(command.getUsername(), LocalDateTime.now().toString()));
+            handleUserNotFound(command.getUsername());
             return;
         }
 
@@ -111,14 +113,30 @@ public class AuthCommandHandler {
                 optionalUser.get().getPasswordSalt()
         );
 
-        AuthAggregate authAggregate = new AuthAggregate();
-        LoginUserDto loginUserDto = new LoginUserDto(
-                command.getUsername(),
-                success
-        );
+        processLoginAttempt(command.getUsername(), success);
+    }
 
+    private Optional<User> fetchUser(String username) {
+        return queryGateway.query(new GetUserByUsername(username));
+    }
+
+    private void handleUserNotFound(String username) {
+        log.warn("User {} not found during login attempt!", username);
+        applicationEventPublisher.publishEvent(
+                new LoginFailedEvent(username, LocalDateTime.now().toString())
+        );
+    }
+
+    private void processLoginAttempt(String username, boolean success) {
+        AuthAggregate authAggregate = new AuthAggregate(eventProcessorService);
+
+        LoginUserDto loginUserDto = new LoginUserDto(username, success);
         authAggregate.handleLoginAttempt(loginUserDto);
 
+        publishDomainEvents(authAggregate);
+    }
+
+    private void publishDomainEvents(AuthAggregate authAggregate) {
         for (Object event : authAggregate.getChanges()) {
             eventPublisher.publishEvent(event);
         }
@@ -135,7 +153,11 @@ public class AuthCommandHandler {
      * @param passwordSalt the salt used to hash the user's password.
      * @return {@code true} if the credentials are valid; {@code false} otherwise.
      */
-    private boolean validateCredentials(String password, String passwordHash, String passwordSalt) {
+    private boolean validateCredentials(
+            String password,
+            String passwordHash,
+            String passwordSalt
+    ) {
         return HashingUtil.verifyPassword(password, passwordHash, passwordSalt);
     }
 }

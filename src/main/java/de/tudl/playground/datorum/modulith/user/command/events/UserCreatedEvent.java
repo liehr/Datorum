@@ -1,6 +1,7 @@
 package de.tudl.playground.datorum.modulith.user.command.events;
 
 import de.tudl.playground.datorum.modulith.eventstore.AggregateId;
+import de.tudl.playground.datorum.modulith.shared.event.Event;
 import lombok.Getter;
 
 /**
@@ -15,6 +16,7 @@ import lombok.Getter;
  * @param passwordSalt the cryptographic salt used in hashing the user's password.
  * @param role         the role assigned to the user, which defines their permissions and access within the system.
  */
+@Event
 public record UserCreatedEvent(
         @AggregateId String userId,
         @Getter String username,
