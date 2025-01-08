@@ -3,62 +3,65 @@ package de.tudl.playground.datorum.ui.controller;
 import de.tudl.playground.datorum.gateway.command.CommandGateway;
 import de.tudl.playground.datorum.modulith.shared.util.HashingUtil;
 import de.tudl.playground.datorum.modulith.user.command.commands.CreateUserCommand;
+import de.tudl.playground.datorum.modulith.user.command.events.UserCreatedEvent;
 import de.tudl.playground.datorum.ui.util.StageSwitcher;
-import java.util.UUID;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import de.tudl.playground.datorum.ui.view.LoginView;
+import javafx.scene.control.Alert;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
-@RequiredArgsConstructor
 public class RegisterController {
-
-    @FXML
-    public TextField usernameField;
-
-    @FXML
-    public PasswordField passwordField;
-
-    @FXML
-    public PasswordField confirmPasswordField;
 
     private final StageSwitcher stageSwitcher;
 
-    private CommandGateway commandGateway;
+    private final CommandGateway commandGateway;
 
-    @Autowired
-    public RegisterController(
-            StageSwitcher stageSwitcher,
-            CommandGateway commandGateway
-    ) {
+    public RegisterController(StageSwitcher stageSwitcher, CommandGateway commandGateway) {
         this.stageSwitcher = stageSwitcher;
         this.commandGateway = commandGateway;
     }
 
-    @FXML
-    public void handleRegister(ActionEvent event) {
+    public void handleRegister(String username, String password, String confirmPassword) {
+        if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            showAlert("Fehler", "Alle Felder müssen ausgefüllt werden.");
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            showAlert("Fehler", "Die Passwörter stimmen nicht überein.");
+            return;
+        }
+
         String salt = UUID.randomUUID().toString() + UUID.randomUUID();
 
         CreateUserCommand createUserCommand = new CreateUserCommand(
                 UUID.randomUUID().toString(),
-                usernameField.getText(),
-                HashingUtil.hashPassword(passwordField.getText(), salt),
+                username,
+                HashingUtil.hashPassword(password, salt),
                 salt,
                 "USER"
         );
 
         commandGateway.send(createUserCommand);
-
-        goToLogin(event);
     }
 
-    @FXML
-    public void goToLogin(ActionEvent event) {
-        // Navigate back to login page
-        stageSwitcher.switchTo("/fxml/login/Login.fxml");
+    @EventListener
+    private void on (UserCreatedEvent event) {
+        showAlert("Erfolg", "Erfolgreich registriert!");
+        stageSwitcher.switchTo(LoginView.class);
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public void goToLogin() {
+        stageSwitcher.switchTo(LoginView.class);
     }
 }

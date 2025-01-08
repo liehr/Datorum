@@ -1,14 +1,9 @@
 package de.tudl.playground.datorum.ui.util;
 
-import java.io.IOException;
-
-import de.tudl.playground.datorum.ui.exception.ResourceNotFoundException;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import de.tudl.playground.datorum.ui.view.ApplicationView;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -16,23 +11,21 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StageSwitcher {
 
-    private static Stage stage; // Still static to allow global stage reference
+    private static Stage stage;
     private final ApplicationContext applicationContext;
 
     public static void setStage(Stage stage) {
         StageSwitcher.stage = stage;
     }
 
-    @SneakyThrows
-    public void switchTo(String fxmlPath) {
+    public void switchTo(Class<? extends ApplicationView> viewClass) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
-            fxmlLoader.setControllerFactory(applicationContext::getBean);
-            Parent parent = fxmlLoader.load();
-            stage.setScene(new Scene(parent));
+            ApplicationView view = applicationContext.getBean(viewClass);
+            Scene scene = view.createScene();
+            stage.setScene(scene);
             stage.show();
-        } catch (IOException e) {
-            throw new ResourceNotFoundException("Error loading FXML: " + fxmlPath, e);
+        } catch (Exception e) {
+            throw new RuntimeException("Error switching to view: " + viewClass.getName(), e);
         }
     }
 }
