@@ -1,7 +1,5 @@
 package de.tudl.playground.datorum.modulith.user.command.events;
 
-import de.tudl.playground.datorum.modulith.auth.command.events.ValidateCredentialsEvent;
-import de.tudl.playground.datorum.modulith.shared.util.HashingUtil;
 import de.tudl.playground.datorum.modulith.user.command.data.User;
 import de.tudl.playground.datorum.modulith.user.command.data.UserRepository;
 import java.util.UUID;
@@ -84,23 +82,5 @@ public class UserEventHandler {
         user.setRole(event.getRole());
 
         userRepository.save(user);
-    }
-
-    @EventListener
-    public void on(ValidateCredentialsEvent event) {
-        userRepository
-                .findUserByUsername(event.getUsername())
-                .ifPresent(user -> {
-                    boolean isValid = validatePassword(
-                            event.getPassword(),
-                            user.getPasswordHash(),
-                            user.getPasswordSalt()
-                    );
-                    event.setSuccess(isValid);
-                });
-    }
-
-    private boolean validatePassword(String password, String hash, String salt) {
-        return HashingUtil.verifyPassword(password, hash, salt);
     }
 }

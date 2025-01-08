@@ -6,6 +6,8 @@ import de.tudl.playground.datorum.modulith.user.command.data.UserRepository;
 import de.tudl.playground.datorum.modulith.user.query.queries.GetUserByUsername;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class GetUserByUsernameQueryHandler
         implements QueryHandler<GetUserByUsername, User> {
@@ -17,9 +19,8 @@ public class GetUserByUsernameQueryHandler
     }
 
     @Override
-    public User handle(GetUserByUsername query) {
-        return userRepository
-                .findUserByUsername(query.username())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public Optional<User> handle(GetUserByUsername query) {
+        return userRepository.findUserByUsername(query.username());
     }
+
 }

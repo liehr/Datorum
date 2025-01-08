@@ -4,6 +4,8 @@ import de.tudl.playground.datorum.gateway.query.QueryHandler;
 import de.tudl.playground.datorum.modulith.user.command.data.User;
 import de.tudl.playground.datorum.modulith.user.command.data.UserRepository;
 import de.tudl.playground.datorum.modulith.user.query.queries.GetUserByIdQuery;
+
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 
@@ -54,9 +56,7 @@ public class GetUserByIdQueryHandler
      * @throws RuntimeException if no user is found for the provided ID.
      */
     @Override
-    public User handle(GetUserByIdQuery query) {
-        return userRepository
-                .findById(UUID.fromString(query.userId()))
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public Optional<User> handle(GetUserByIdQuery query) {
+        return userRepository.findById(UUID.fromString(query.userId()));
     }
 }

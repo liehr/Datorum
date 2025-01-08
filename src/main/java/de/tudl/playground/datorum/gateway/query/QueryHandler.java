@@ -1,5 +1,7 @@
 package de.tudl.playground.datorum.gateway.query;
 
+import java.util.Optional;
+
 /**
  * The {@code QueryHandler} interface defines a contract for handling specific types of queries in the system.
  * <p>
@@ -21,5 +23,5 @@ public interface QueryHandler<Q, R> {
      * @param query the query object to be processed.
      * @return the result of processing the query.
      */
-    R handle(Q query);
+    Optional<R> handle(Q query);
 }

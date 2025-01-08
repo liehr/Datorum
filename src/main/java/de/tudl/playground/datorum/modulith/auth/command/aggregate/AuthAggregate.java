@@ -131,6 +131,7 @@ public class AuthAggregate {
      */
     @SneakyThrows
     private void processEvent(EventStore eventStore) {
+        // TODO Implement EventProcessor Service
         try {
             String eventType = eventStore.getEventType();
             String eventData = eventStore.getEventData();

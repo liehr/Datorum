@@ -21,5 +21,5 @@ public interface QueryGateway {
      * @param <R> the type of the result returned by the query handler.
      * @return the result of the query processing.
      */
-    <R> Object query(Object query);
+    <R> R query(Object query);
 }
