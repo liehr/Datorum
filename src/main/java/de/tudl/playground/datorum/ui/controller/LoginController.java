@@ -2,50 +2,56 @@ package de.tudl.playground.datorum.ui.controller;
 
 import de.tudl.playground.datorum.gateway.command.CommandGateway;
 import de.tudl.playground.datorum.modulith.auth.command.commands.LoginUserCommand;
+import de.tudl.playground.datorum.modulith.auth.command.events.LoginFailedEvent;
+import de.tudl.playground.datorum.modulith.auth.command.events.LoginSuccessfulEvent;
 import de.tudl.playground.datorum.ui.util.StageSwitcher;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import de.tudl.playground.datorum.ui.view.MainView;
+import de.tudl.playground.datorum.ui.view.RegisterView;
+import javafx.scene.control.Alert;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class LoginController {
 
     private final StageSwitcher stageSwitcher;
 
-    @FXML
-    public TextField usernameField;
+    private final CommandGateway commandGateway;
 
-    @FXML
-    public PasswordField passwordField;
-
-    private CommandGateway commandGateway;
-
-    @Autowired
-    public LoginController(
-            StageSwitcher stageSwitcher,
-            CommandGateway commandGateway
-    ) {
+    public LoginController(StageSwitcher stageSwitcher, CommandGateway commandGateway) {
         this.stageSwitcher = stageSwitcher;
         this.commandGateway = commandGateway;
     }
 
-    @FXML
-    public void handleLogin(ActionEvent event) {
-        LoginUserCommand command = new LoginUserCommand(
-                usernameField.getText(),
-                passwordField.getText()
-        );
+    public void handleLogin(String username, String password) {
+        if (username.isEmpty() || password.isEmpty()) {
+            showAlert("Fehler", "Benutzername und Passwort dürfen nicht leer sein.");
+            return;
+        }
 
-        commandGateway.send(command);
+        LoginUserCommand loginUserCommand = new LoginUserCommand(username, password);
+        commandGateway.send(loginUserCommand);
     }
 
-    @FXML
-    public void goToRegister(ActionEvent event) {
-        stageSwitcher.switchTo("/fxml/register/Register.fxml");
+    @EventListener
+    public void on (LoginSuccessfulEvent event) {
+        showAlert("Erfolg!", "Erfolgreich angemeldet!");
+        stageSwitcher.switchTo(MainView.class);
+    }
+
+    @EventListener
+    public void on (LoginFailedEvent event) {
+        showAlert("Fehler", "Fehlerhafte Eingabe!");
+    }
+
+    public void goToRegister() {
+        stageSwitcher.switchTo(RegisterView.class);
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
