@@ -61,7 +61,7 @@ public class AuthAggregate {
      */
     public void handleLoginAttempt(LoginUserDto loginDto) {
         if (loginDto.success()) {
-            apply(new LoginSuccessfulEvent(loginDto.username(), LocalDateTime.now().toString()));
+            apply(new LoginSuccessfulEvent(loginDto.username(), loginDto.role(), LocalDateTime.now().toString()));
         } else {
             apply(new LoginFailedEvent(
                     loginDto.username().isBlank() ? "empty_username" : loginDto.username(),

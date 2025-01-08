@@ -1,6 +1,5 @@
 package de.tudl.playground.datorum.ui;
 
-import de.tudl.playground.datorum.ui.controller.UserController;
 import de.tudl.playground.datorum.ui.event.StageReadyEvent;
 import de.tudl.playground.datorum.ui.exception.ErrorLoadingViewException;
 import de.tudl.playground.datorum.ui.util.StageSwitcher;
@@ -21,15 +20,13 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
 
     private final ApplicationContext applicationContext;
     private final String applicationTitle;
-    private final UserController userController;
 
     public StageInitializer(
             ApplicationContext applicationContext,
-            @Value("${spring.application.ui.title}") String applicationTitle, UserController userController
+            @Value("${spring.application.ui.title}") String applicationTitle
     ) {
         this.applicationContext = applicationContext;
         this.applicationTitle = applicationTitle;
-        this.userController = userController;
     }
 
 
@@ -38,7 +35,6 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
         Stage stage = event.getStage();
         StageSwitcher.setStage(stage);
 
-        userController.updateUser("72e564a6-fc3f-47ec-a076-4146125c0699");
         switchToView(stage);
     }
 

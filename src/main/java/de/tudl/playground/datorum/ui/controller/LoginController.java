@@ -32,16 +32,6 @@ public class LoginController {
 
         LoginUserCommand loginUserCommand = new LoginUserCommand(username, password);
         commandGateway.send(loginUserCommand);
-
-        UpdateUserCommand updateUserCommand = new UpdateUserCommand(
-                "72e564a6-fc3f-47ec-a076-4146125c0699",
-                "MyTestName",
-                "Test",
-                "Blablabla",
-                "AWESOMECLASS"
-        );
-
-        commandGateway.send(updateUserCommand);
     }
 
     @EventListener
