@@ -10,12 +10,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 class DefaultQueryGatewayEdgeCaseTests {
@@ -43,10 +43,24 @@ class DefaultQueryGatewayEdgeCaseTests {
 
         when(applicationContext.getBeansOfType(QueryHandler.class)).thenReturn(Map.of("sampleQueryHandler", queryHandler1, "anotherQueryHandler", queryHandler2));
 
-        Optional<String> result = queryGateway.query(sampleQuery);
+        Optional<?> result = queryGateway.query(sampleQuery);
 
-        assertEquals("Handled SampleQuery", result.get());
+        assertTrue(result.isPresent());
+        assertEquals(List.of("Handled SampleQuery", "Handled AnotherQuery"), result.get());
+    }
 
+    @Test
+    void testHandlersWithOverlappingGenericParameters()
+    {
+        TestQueries.ChildQuery childQuery = new TestQueries.ChildQuery();
+        TestHandlers.ParentQueryHandler parentQueryHandler = new TestHandlers.ParentQueryHandler();
+        TestHandlers.ChildQueryHandler childQueryHandler = new TestHandlers.ChildQueryHandler();
 
+        when(applicationContext.getBeansOfType(QueryHandler.class)).thenReturn(Map.of("parentQueryHandler", parentQueryHandler, "childQueryHandler", childQueryHandler));
+
+        Optional<?> result = queryGateway.query(childQuery);
+
+        assertTrue(result.isPresent());
+        assertEquals("Handled ChildQuery", result.get());
     }
 }
