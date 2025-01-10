@@ -147,13 +147,17 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version> <!-- Add version for better compatibility -->
                 <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <!-- Ensure annotation processors are automatically picked from classpath -->
                     <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </path>
+                        <!-- Automatically uses annotation processors available in project dependencies -->
                     </annotationProcessorPaths>
+                    <compilerArgs>
+                        <arg>-proc:only</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>

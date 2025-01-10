@@ -2,13 +2,16 @@ package de.tudl.playground.datorum.gateway;
 
 import de.tudl.playground.datorum.gateway.helpers.TestHandlers;
 import de.tudl.playground.datorum.gateway.helpers.TestQueries;
+import de.tudl.playground.datorum.gateway.query.DefaultHandlerResolver;
 import de.tudl.playground.datorum.gateway.query.DefaultQueryGateway;
+import de.tudl.playground.datorum.gateway.query.HandlerResolver;
 import de.tudl.playground.datorum.gateway.query.QueryHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -23,7 +26,8 @@ class DefaultQueryGatewayBasicTests {
     @BeforeEach
     public void setup() {
         applicationContext = mock(ApplicationContext.class);
-        queryGateway = new DefaultQueryGateway(applicationContext);
+        DefaultHandlerResolver defaultHandlerResolver = new DefaultHandlerResolver();
+        queryGateway = new DefaultQueryGateway(applicationContext, defaultHandlerResolver);
     }
 
     @Test
@@ -44,10 +48,10 @@ class DefaultQueryGatewayBasicTests {
         when(applicationContext.getBeansOfType(QueryHandler.class)).thenReturn(Map.of("parentQueryHandler", parentQueryHandler));
 
         // Act
-        String result = queryGateway.query(childQuery);
+        Optional<String> result = queryGateway.query(childQuery);
 
         // Assert
-        assertEquals("Handled ParentQuery", result);
+        assertEquals("Handled ParentQuery", result.get());
     }
 
     @Test

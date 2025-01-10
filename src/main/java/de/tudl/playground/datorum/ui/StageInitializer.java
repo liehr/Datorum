@@ -35,6 +35,8 @@ public class StageInitializer implements ApplicationListener<StageReadyEvent> {
         Stage stage = event.getStage();
         StageSwitcher.setStage(stage);
 
+
+
         switchToView(stage);
     }
 
