@@ -1,5 +1,6 @@
-package de.tudl.playground.datorum.gateway.query;
+package de.tudl.playground.datorum.gateway.query.resolver;
 
+import de.tudl.playground.datorum.gateway.query.QueryHandler;
 import de.tudl.playground.datorum.gateway.query.annotation.HandlerPriority;
 import org.springframework.stereotype.Service;
 

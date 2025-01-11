@@ -2,9 +2,8 @@ package de.tudl.playground.datorum.gateway;
 
 import de.tudl.playground.datorum.gateway.helpers.TestHandlers;
 import de.tudl.playground.datorum.gateway.helpers.TestQueries;
-import de.tudl.playground.datorum.gateway.query.DefaultHandlerResolver;
+import de.tudl.playground.datorum.gateway.query.resolver.DefaultHandlerResolver;
 import de.tudl.playground.datorum.gateway.query.DefaultQueryGateway;
-import de.tudl.playground.datorum.gateway.query.HandlerResolver;
 import de.tudl.playground.datorum.gateway.query.QueryHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,13 +24,8 @@ class DefaultQueryGatewayEdgeCaseTests {
     @BeforeEach
     public void setup() {
         applicationContext = mock(ApplicationContext.class);
-        DefaultHandlerResolver defaultHandlerResolver = getDefaultHandlerResolver();
-        queryGateway = new DefaultQueryGateway(applicationContext, defaultHandlerResolver);
-    }
-
-    private static DefaultHandlerResolver getDefaultHandlerResolver() {
         DefaultHandlerResolver defaultHandlerResolver = new DefaultHandlerResolver();
-        return defaultHandlerResolver;
+        queryGateway = new DefaultQueryGateway(applicationContext, defaultHandlerResolver);
     }
 
     @Test
@@ -46,7 +40,7 @@ class DefaultQueryGatewayEdgeCaseTests {
         Optional<?> result = queryGateway.query(sampleQuery);
 
         assertTrue(result.isPresent());
-        assertEquals(List.of("Handled SampleQuery", "Handled AnotherQuery"), result.get());
+        assertEquals(List.of("Handled by SampleQueryHandler", "Handled by AnotherQueryHandler"), result.get());
     }
 
     @Test
@@ -61,6 +55,22 @@ class DefaultQueryGatewayEdgeCaseTests {
         Optional<?> result = queryGateway.query(childQuery);
 
         assertTrue(result.isPresent());
-        assertEquals("Handled ChildQuery", result.get());
+        assertEquals("Handled by ChildQueryHandler", result.get());
     }
+
+    @Test
+    void testHandlerForGenericQuery_ButSpecificTypPassed()
+    {
+        TestQueries.SampleQuery sampleQuery = new TestQueries.SampleQuery();
+        TestHandlers.GenericQueryHandler genericQueryHandler = new TestHandlers.GenericQueryHandler();
+
+        when(applicationContext.getBeansOfType(QueryHandler.class)).thenReturn(Map.of("genericQueryHandler", genericQueryHandler));
+
+        Optional<?> result = queryGateway.query(sampleQuery);
+
+        assertTrue(result.isPresent());
+        assertEquals("Handled by GenericQueryHandler", result.get());
+    }
+
+
 }

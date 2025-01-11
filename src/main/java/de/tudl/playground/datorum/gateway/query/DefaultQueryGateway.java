@@ -3,6 +3,7 @@ package de.tudl.playground.datorum.gateway.query;
 import java.util.List;
 import java.util.Optional;
 
+import de.tudl.playground.datorum.gateway.query.resolver.HandlerResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -78,8 +79,11 @@ public class DefaultQueryGateway implements QueryGateway {
      */
     @Override
     public <Q, R> Optional<R> query(Q query) {
-        Class<?> queryType = query.getClass();
 
+        if (query == null)
+            throw new IllegalArgumentException("Cannot handle query of type null");
+
+        Class<?> queryType = query.getClass();
         // Fetch all registered handlers from the application context
         var allHandlers = applicationContext.getBeansOfType(QueryHandler.class).values();
 
