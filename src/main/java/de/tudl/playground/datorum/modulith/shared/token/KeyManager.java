@@ -70,7 +70,6 @@ public class KeyManager {
         if (Files.notExists(KEY_FILE_PATH)) {
             return generateKey();
         }
-
         return Files.readString(KEY_FILE_PATH);
     }
 

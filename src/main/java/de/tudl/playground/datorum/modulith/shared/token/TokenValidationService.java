@@ -1,6 +1,7 @@
 package de.tudl.playground.datorum.modulith.shared.token;
 
 import de.tudl.playground.datorum.modulith.shared.token.data.Token;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -66,6 +67,7 @@ import java.util.Optional;
  * @see TokenManager
  * @see Token
  */
+@Slf4j
 @Component
 public class TokenValidationService {
 
@@ -78,12 +80,14 @@ public class TokenValidationService {
     public boolean isValidToken() throws IOException {
         try {
             String key = KeyManager.loadKey();
+
+            log.info("Current signing key: {}", key);
             if (tokenFileService.isTokenFilePresent()) {
                 Optional<Token> token = tokenFileService.readToken();
                 return token.filter(value -> TokenManager.validateToken(value, key)).isPresent();
             }
         } catch (Exception e) {
-            throw new IOException("Cannot load Key or Token from File!", e);
+            throw new IOException("Cannot load key or token from file!", e);
         }
         return false;
     }

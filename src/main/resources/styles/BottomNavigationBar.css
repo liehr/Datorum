@@ -1,0 +1,27 @@
+/* Styles for the navigation bar */
+.navigation-bar {
+    background-color: #f4f4f4; /* Background color of the navigation bar */
+    padding: 10px; /* Padding around the navigation bar */
+    border-top: 2px solid #e0e0e0; /* Top border */
+}
+
+/* Styles for the buttons */
+.nav-button {
+    background-color: #ffffff; /* Button background color */
+    border: none; /* No border */
+    font-size: 18px; /* Font size for the icons */
+    text-fill: #333333; /* Text color */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect */
+.nav-button:hover {
+    background-color: #d1e8ff; /* Hover background color */
+    transform: scale(1.1); /* Slight enlargement on hover */
+}
+
+/* Pressed effect */
+.nav-button:pressed {
+    background-color: #a0c4ff; /* Background color when pressed */
+    transform: scale(0.9); /* Slight shrinkage on press */
+}
