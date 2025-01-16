@@ -6,5 +6,4 @@ public class TestQueries
     public static class ParentQuery { }
     public static class ChildQuery extends ParentQuery { }
     public static class GenericQuery { }
-
 }

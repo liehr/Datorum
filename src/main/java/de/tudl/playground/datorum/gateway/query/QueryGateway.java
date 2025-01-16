@@ -1,5 +1,7 @@
 package de.tudl.playground.datorum.gateway.query;
 
+import java.util.Optional;
+
 /**
  * The {@code QueryGateway} interface defines a contract for executing queries within the system.
  * It provides a method for querying data by dispatching a query to the appropriate handler.
@@ -18,8 +20,10 @@ public interface QueryGateway {
      * </p>
      *
      * @param query the query object that needs to be processed.
-     * @param <R> the type of the result returned by the query handler.
+     * @param <Q>   the type of the query being processed.
+     * @param <R>   the type of the result returned by the query handler.
      * @return the result of the query processing.
      */
-    <R> Object query(Object query);
+    <Q, R> Optional<R> query(Q query);
 }
+

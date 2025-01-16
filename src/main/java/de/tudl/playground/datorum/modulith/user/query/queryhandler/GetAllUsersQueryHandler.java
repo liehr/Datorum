@@ -5,6 +5,8 @@ import de.tudl.playground.datorum.modulith.user.command.data.User;
 import de.tudl.playground.datorum.modulith.user.command.data.UserRepository;
 import de.tudl.playground.datorum.modulith.user.query.queries.GetAllUsersQuery;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -54,7 +56,7 @@ public class GetAllUsersQueryHandler
      * @return a list of {@link User} objects representing all users in the system.
      */
     @Override
-    public List<User> handle(GetAllUsersQuery query) {
-        return userRepository.findAll();
+    public Optional<List<User>> handle(GetAllUsersQuery query) {
+        return Optional.of(userRepository.findAll());
     }
 }

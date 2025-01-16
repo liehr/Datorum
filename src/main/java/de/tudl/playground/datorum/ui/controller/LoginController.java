@@ -4,6 +4,7 @@ import de.tudl.playground.datorum.gateway.command.CommandGateway;
 import de.tudl.playground.datorum.modulith.auth.command.commands.LoginUserCommand;
 import de.tudl.playground.datorum.modulith.auth.command.events.LoginFailedEvent;
 import de.tudl.playground.datorum.modulith.auth.command.events.LoginSuccessfulEvent;
+import de.tudl.playground.datorum.modulith.user.command.commands.UpdateUserCommand;
 import de.tudl.playground.datorum.ui.util.StageSwitcher;
 import de.tudl.playground.datorum.ui.view.MainView;
 import de.tudl.playground.datorum.ui.view.RegisterView;
