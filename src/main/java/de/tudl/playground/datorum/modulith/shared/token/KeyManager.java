@@ -14,19 +14,20 @@ import java.util.Base64;
  * <p>
  * The {@code KeyManager} handles loading and generating a secret key stored in a file.
  * It ensures that the application has a consistent key for operations such as token validation.
- * The key is stored as a Base64-encoded string in the {@code APPDATA/.datorum} directory.
+ * The key is stored as a Base64-encoded string in the {@code ~/.datorum} directory,
+ * where {@code ~} represents the user's home directory.
  * </p>
  *
  * <h2>Key Features:</h2>
  * <ul>
  *     <li>Loads an existing key from a file, or generates a new one if the file does not exist.</li>
  *     <li>Uses HMAC-SHA256 for key generation with a key size of 256 bits.</li>
- *     <li>Stores the generated key securely in the {@code APPDATA/.datorum} directory.</li>
+ *     <li>Stores the generated key securely in the {@code ~/.datorum} directory.</li>
  * </ul>
  *
- * <h2>Environment Variable Dependency:</h2>
- * This class relies on the {@code APPDATA} environment variable to determine the base directory
- * for storing the key file.
+ * <h2>Cross-Platform Compatibility:</h2>
+ * This class determines the directory for storing the key file based on the {@code user.home} system property,
+ * ensuring compatibility across Windows, Linux, and macOS.
  *
  * <h2>Thread Safety:</h2>
  * This utility class is thread-safe as it does not maintain any mutable state.
@@ -50,7 +51,7 @@ import java.util.Base64;
 public class KeyManager {
     private static final String DIRECTORY_NAME = ".datorum";
     private static final String KEY_FILE = "app.key";
-    private static final Path KEY_DIRECTORY_PATH = Paths.get(System.getenv("APPDATA"), DIRECTORY_NAME);
+    private static final Path KEY_DIRECTORY_PATH = Paths.get(System.getProperty("user.home"), DIRECTORY_NAME);
     private static final Path KEY_FILE_PATH = KEY_DIRECTORY_PATH.resolve(KEY_FILE);
 
     private KeyManager() {
@@ -91,6 +92,9 @@ public class KeyManager {
         return encodedKey;
     }
 
+    /**
+     * Ensures the key directory exists. If it does not, it is created.
+     */
     @SneakyThrows
     private static void ensureDirectoryExists() {
         if (Files.notExists(KEY_DIRECTORY_PATH)) {
