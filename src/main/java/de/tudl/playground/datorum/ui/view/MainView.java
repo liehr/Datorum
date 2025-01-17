@@ -2,12 +2,16 @@ package de.tudl.playground.datorum.ui.view;
 
 import de.tudl.playground.datorum.modulith.shared.token.AuthTokenProvider;
 import de.tudl.playground.datorum.ui.controller.MainController;
+import de.tudl.playground.datorum.ui.view.nav.BottomNavigationBar;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -21,32 +25,51 @@ public class MainView implements ApplicationView{
         this.tokenProvider = tokenProvider;
     }
 
+    private Node getAuthorizedContent() {
+        StackPane stackPane = new StackPane();
+
+        List<Button> buttons = getButtons();
+        // Create BottomNavigationBar
+        BottomNavigationBar bottomNavigationBar = new BottomNavigationBar(buttons);
+
+        // Create Title Label
+        Label title = new Label("Datorum");
+
+        // Add children to the StackPane
+        stackPane.getChildren().addAll(bottomNavigationBar, title);
+
+        // Align components
+        StackPane.setAlignment(title, Pos.TOP_CENTER);
+
+        return stackPane;
+    }
+
+    private List<Button> getButtons() {
+        Button homeButton = new Button("🏠");
+        homeButton.setOnAction(e -> mainController.handleLogout());
+
+        Button textButton = new Button("T");
+        textButton.setOnAction(e -> System.out.println("Text clicked"));
+
+        Button imageButton = new Button("🖼️");
+        imageButton.setOnAction(e -> System.out.println("Image clicked"));
+
+        Button clipboardButton = new Button("📋");
+        clipboardButton.setOnAction(e -> System.out.println("Clipboard clicked"));
+
+        Button gridButton = new Button("🗂️");
+        gridButton.setOnAction(e -> System.out.println("Grid clicked"));
+
+        return List.of(homeButton, textButton, imageButton, clipboardButton, gridButton);
+    }
+
     @Override
     public Scene createScene() {
         AuthorizeView authorizeView = new AuthorizeView(tokenProvider);
         authorizeView.setPrefHeight(720.0);
         authorizeView.setPrefWidth(1280.0);
         authorizeView.setRoles("ADMIN", "USER");
-        authorizeView.setAuthorizedContent(() -> {
-            StackPane stackPane = new StackPane();
-            stackPane.setPrefHeight(720.0);
-            stackPane.setPrefWidth(1280.0);
-
-            // Create BottomNavigationBar
-            BottomNavigationBar bottomNavigationBar = new BottomNavigationBar();
-
-            // Create Title Label
-            Label title = new Label("Datorum");
-
-            // Add children to the StackPane
-            stackPane.getChildren().addAll(bottomNavigationBar, title);
-
-            // Align components
-            StackPane.setAlignment(bottomNavigationBar, Pos.BOTTOM_CENTER);
-            StackPane.setAlignment(title, Pos.TOP_CENTER);
-
-            return stackPane;
-        });
+        authorizeView.setAuthorizedContent(this::getAuthorizedContent);
 
         authorizeView.setNotAuthorizedContent(
                 () -> new Label("You are not authorized!"));
@@ -57,3 +80,4 @@ public class MainView implements ApplicationView{
         return scene;
     }
 }
+

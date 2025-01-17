@@ -29,4 +29,11 @@ public class AuthEventHandler
 
         tokenFileService.writeToken(token);
     }
+
+    @SneakyThrows
+    @EventListener
+    public void on (LogoutEvent event)
+    {
+        tokenFileService.deleteTokenFile();
+    }
 }

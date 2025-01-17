@@ -2,6 +2,7 @@ package de.tudl.playground.datorum.modulith.shared.token;
 
 import de.tudl.playground.datorum.modulith.shared.token.data.Token;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -69,6 +70,7 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
+@Scope("singleton")
 public class TokenValidationService {
 
     private final TokenFileService tokenFileService;
@@ -80,8 +82,6 @@ public class TokenValidationService {
     public boolean isValidToken() throws IOException {
         try {
             String key = KeyManager.loadKey();
-
-            log.info("Current signing key: {}", key);
             if (tokenFileService.isTokenFilePresent()) {
                 Optional<Token> token = tokenFileService.readToken();
                 return token.filter(value -> TokenManager.validateToken(value, key)).isPresent();

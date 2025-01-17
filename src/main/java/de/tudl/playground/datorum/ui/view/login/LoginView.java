@@ -1,6 +1,7 @@
-package de.tudl.playground.datorum.ui.view;
+package de.tudl.playground.datorum.ui.view.login;
 
 import de.tudl.playground.datorum.ui.controller.LoginController;
+import de.tudl.playground.datorum.ui.view.ApplicationView;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;

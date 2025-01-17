@@ -1,8 +1,10 @@
 package de.tudl.playground.datorum.modulith.auth.command.aggregate;
 
 import de.tudl.playground.datorum.modulith.auth.command.data.dto.LoginUserDto;
+import de.tudl.playground.datorum.modulith.auth.command.data.dto.LogoutUserDto;
 import de.tudl.playground.datorum.modulith.auth.command.events.LoginFailedEvent;
 import de.tudl.playground.datorum.modulith.auth.command.events.LoginSuccessfulEvent;
+import de.tudl.playground.datorum.modulith.auth.command.events.LogoutEvent;
 import de.tudl.playground.datorum.modulith.eventstore.EventStore;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -68,6 +70,11 @@ public class AuthAggregate {
                     LocalDateTime.now().toString()
             ));
         }
+    }
+
+    public void handleLogoutAttempt(LogoutUserDto logoutDto)
+    {
+        apply(new LogoutEvent(logoutDto.username()));
     }
 
     /**

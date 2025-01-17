@@ -3,6 +3,7 @@ package de.tudl.playground.datorum.modulith.auth.command.commands;
 import de.tudl.playground.datorum.gateway.query.QueryGateway;
 import de.tudl.playground.datorum.modulith.auth.command.aggregate.AuthAggregate;
 import de.tudl.playground.datorum.modulith.auth.command.data.dto.LoginUserDto;
+import de.tudl.playground.datorum.modulith.auth.command.data.dto.LogoutUserDto;
 import de.tudl.playground.datorum.modulith.auth.command.events.LoginFailedEvent;
 import de.tudl.playground.datorum.modulith.eventstore.EventPublisher;
 import de.tudl.playground.datorum.modulith.eventstore.EventStoreRepository;
@@ -116,6 +117,12 @@ public class AuthCommandHandler {
         processLoginAttempt(command.getUsername(), optionalUser.get().getRole(), success);
     }
 
+    @EventListener
+    public void handle(LogoutUserCommand command)
+    {
+        processLogoutAttempt(command.getUsername());
+    }
+
     private Optional<User> fetchUser(String username) {
         return queryGateway.query(new GetUserByUsername(username));
     }
@@ -132,6 +139,16 @@ public class AuthCommandHandler {
 
         LoginUserDto loginUserDto = new LoginUserDto(username, role, success);
         authAggregate.handleLoginAttempt(loginUserDto);
+
+        publishDomainEvents(authAggregate);
+    }
+
+    private void processLogoutAttempt(String username)
+    {
+        AuthAggregate authAggregate = new AuthAggregate(eventProcessorService);
+
+        LogoutUserDto logoutUserDto = new LogoutUserDto(username);
+        authAggregate.handleLogoutAttempt(logoutUserDto);
 
         publishDomainEvents(authAggregate);
     }
