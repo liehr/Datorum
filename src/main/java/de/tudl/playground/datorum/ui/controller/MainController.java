@@ -17,15 +17,17 @@ public class MainController
 {
     private final StageSwitcher stageSwitcher;
     private final CommandGateway commandGateway;
-    private final Token token;
+    private final AuthTokenProvider authTokenProvider;
+    private Token token;
     public MainController(AuthTokenProvider authTokenProvider, StageSwitcher stageSwitcher, CommandGateway commandGateway) {
         this.stageSwitcher = stageSwitcher;
         this.commandGateway = commandGateway;
-        token = authTokenProvider.getToken();
+        this.authTokenProvider = authTokenProvider;
     }
 
     public void handleLogout()
     {
+        token = authTokenProvider.getToken();
         commandGateway.send(new LogoutUserCommand(token.username()));
     }
 
