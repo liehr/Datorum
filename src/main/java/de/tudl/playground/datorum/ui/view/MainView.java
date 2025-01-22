@@ -25,7 +25,7 @@ public class MainView implements ApplicationView {
         this.tokenProvider = tokenProvider;
     }
 
-    private Node getAuthorizedContent() {
+    private Node getAdminContent() {
         StackPane stackPane = new StackPane();
 
         List<Button> buttons = getButtons();
@@ -33,12 +33,28 @@ public class MainView implements ApplicationView {
         BottomNavigationBar bottomNavigationBar = new BottomNavigationBar(buttons);
 
         // Create Title Label
-        Label title = new Label("Datorum");
+        Label title = new Label("Datorum Admin View");
 
         // Add children to the StackPane
         stackPane.getChildren().addAll(bottomNavigationBar, title);
 
         // Align components
+        StackPane.setAlignment(title, Pos.TOP_CENTER);
+
+        return stackPane;
+    }
+
+    private Node getUserContent() {
+        StackPane stackPane = new StackPane();
+
+        List<Button> buttons = getButtons();
+
+        BottomNavigationBar bottomNavigationBar = new BottomNavigationBar(buttons);
+
+        Label title = new Label("Datorum User View");
+
+        stackPane.getChildren().addAll(bottomNavigationBar, title);
+
         StackPane.setAlignment(title, Pos.TOP_CENTER);
 
         return stackPane;
@@ -68,8 +84,7 @@ public class MainView implements ApplicationView {
         AuthorizeView authorizeView = new AuthorizeView(tokenProvider);
         authorizeView.setPrefHeight(720.0);
         authorizeView.setPrefWidth(1280.0);
-        authorizeView.setRoles("ADMIN", "USER");
-        authorizeView.setAuthorizedContent(this::getAuthorizedContent);
+        authorizeView.setAuthorizedContent("ADMIN, USER", this::getAdminContent);
 
         authorizeView.setNotAuthorizedContent(
                 () -> new Label("You are not authorized!"));
