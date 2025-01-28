@@ -51,7 +51,7 @@ public class MainView implements ApplicationView {
         homeButton.setOnAction(e -> mainController.handleLogout());
 
         Button textButton = new Button("T");
-        textButton.setOnAction(e -> mainController.handleBudgetSearch());
+        textButton.setOnAction(e -> mainController.handleBudgetCreate());
 
         Button imageButton = new Button("🖼️");
         imageButton.setOnAction(e -> log.info("Image clicked"));

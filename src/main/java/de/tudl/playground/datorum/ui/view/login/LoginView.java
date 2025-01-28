@@ -8,6 +8,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class LoginView implements ApplicationView {
 
@@ -57,7 +59,7 @@ public class LoginView implements ApplicationView {
         root.getChildren().addAll(headerLabel, formContainer);
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/styles/Login.css").toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/Login.css")).toExternalForm());
 
         return scene;
     }

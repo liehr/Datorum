@@ -8,7 +8,9 @@ import de.tudl.playground.datorum.modulith.budget.command.data.Budget;
 import de.tudl.playground.datorum.modulith.budget.query.queries.GetAllBudgetsQuery;
 import de.tudl.playground.datorum.modulith.shared.token.AuthTokenProvider;
 import de.tudl.playground.datorum.modulith.shared.token.data.Token;
+import de.tudl.playground.datorum.ui.util.ModalPresenter;
 import de.tudl.playground.datorum.ui.util.StageSwitcher;
+import de.tudl.playground.datorum.ui.view.budget.CreateBudgetModal;
 import de.tudl.playground.datorum.ui.view.login.LoginView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -22,12 +24,14 @@ import java.util.Optional;
 public class MainController
 {
     private final StageSwitcher stageSwitcher;
+    private final ModalPresenter modalPresenter;
     private final CommandGateway commandGateway;
     private final QueryGateway queryGateway;
     private final AuthTokenProvider authTokenProvider;
     private Token token;
-    public MainController(AuthTokenProvider authTokenProvider, StageSwitcher stageSwitcher, CommandGateway commandGateway, QueryGateway queryGateway) {
+    public MainController(AuthTokenProvider authTokenProvider, StageSwitcher stageSwitcher, ModalPresenter modalPresenter, CommandGateway commandGateway, QueryGateway queryGateway) {
         this.stageSwitcher = stageSwitcher;
+        this.modalPresenter = modalPresenter;
         this.commandGateway = commandGateway;
         this.authTokenProvider = authTokenProvider;
         this.queryGateway = queryGateway;
@@ -39,12 +43,9 @@ public class MainController
         commandGateway.send(new LogoutUserCommand(token.username()));
     }
 
-    public void handleBudgetSearch()
+    public void handleBudgetCreate()
     {
-        GetAllBudgetsQuery getAllBudgetsQuery = new GetAllBudgetsQuery();
-        Optional<List<Budget>> budgets = queryGateway.query(getAllBudgetsQuery);
-
-        budgets.ifPresent(budgetList -> budgetList.forEach(b -> log.info(String.valueOf(b))));
+        modalPresenter.showModal(CreateBudgetModal.class);
     }
 
     @EventListener

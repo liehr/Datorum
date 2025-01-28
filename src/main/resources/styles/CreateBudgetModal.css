@@ -1,0 +1,54 @@
+/* Root style */
+.modal-root {
+    -fx-background-color: #f4f4f4;
+    -fx-border-color: #dcdcdc;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+/* Title style */
+.modal-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+/* Primary button */
+.primary-button {
+    -fx-background-color: #0078d7;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-padding: 10;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-min-width: 120px; /* Wider than secondary */
+    -fx-max-width: 100%;
+}
+
+.primary-button:hover {
+    -fx-background-color: #005bb5;
+}
+
+.primary-button:pressed {
+    -fx-background-color: #004494;
+}
+
+/* Secondary button */
+.secondary-button {
+    -fx-background-color: #cccccc;
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+    -fx-padding: 10;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-min-width: 80px; /* Narrower than primary */
+    -fx-max-width: 100%;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #aaaaaa;
+}
+
+.secondary-button:pressed {
+    -fx-background-color: #888888;
+}
