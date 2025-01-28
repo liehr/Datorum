@@ -114,7 +114,7 @@ public class AuthCommandHandler {
                 optionalUser.get().getPasswordSalt()
         );
 
-        processLoginAttempt(command.getUsername(), optionalUser.get().getRole(), success);
+        processLoginAttempt(String.valueOf(optionalUser.get().getId()), command.getUsername(), optionalUser.get().getRole(), success);
     }
 
     @EventListener
@@ -134,10 +134,10 @@ public class AuthCommandHandler {
         );
     }
 
-    private void processLoginAttempt(String username, String role, boolean success) {
+    private void processLoginAttempt(String userid, String username, String role, boolean success) {
         AuthAggregate authAggregate = new AuthAggregate(eventProcessorService);
 
-        LoginUserDto loginUserDto = new LoginUserDto(username, role, success);
+        LoginUserDto loginUserDto = new LoginUserDto(userid, username, role, success);
         authAggregate.handleLoginAttempt(loginUserDto);
 
         publishDomainEvents(authAggregate);

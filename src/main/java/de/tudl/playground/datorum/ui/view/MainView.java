@@ -44,28 +44,12 @@ public class MainView implements ApplicationView {
         return stackPane;
     }
 
-    private Node getUserContent() {
-        StackPane stackPane = new StackPane();
-
-        List<Button> buttons = getButtons();
-
-        BottomNavigationBar bottomNavigationBar = new BottomNavigationBar(buttons);
-
-        Label title = new Label("Datorum User View");
-
-        stackPane.getChildren().addAll(bottomNavigationBar, title);
-
-        StackPane.setAlignment(title, Pos.TOP_CENTER);
-
-        return stackPane;
-    }
-
     private List<Button> getButtons() {
         Button homeButton = new Button("🏠");
         homeButton.setOnAction(e -> mainController.handleLogout());
 
         Button textButton = new Button("T");
-        textButton.setOnAction(e -> System.out.println("Text clicked"));
+        textButton.setOnAction(e -> mainController.handleBudgetCreation());
 
         Button imageButton = new Button("🖼️");
         imageButton.setOnAction(e -> System.out.println("Image clicked"));

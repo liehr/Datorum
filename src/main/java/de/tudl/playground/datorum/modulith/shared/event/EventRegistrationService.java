@@ -44,8 +44,6 @@ import java.util.Set;
  *         during registration or processing.</li>
  * </ul>
  *
- * @author
- * @version 1.0
  * @see EventProcessorService
  * @see Event
  * @see Reflections

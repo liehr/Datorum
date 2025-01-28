@@ -28,7 +28,7 @@ public class AuthEventHandler
     {
         String key = KeyManager.loadKey();
 
-        Token token = TokenManager.createToken(event.username(), Collections.singletonList(event.role()), key);
+        Token token = TokenManager.createToken(event.userId(), event.username(), Collections.singletonList(event.role()), key);
 
         tokenFileService.writeToken(token);
         authTokenProvider.setToken(token);

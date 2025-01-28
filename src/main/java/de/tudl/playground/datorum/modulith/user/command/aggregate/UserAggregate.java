@@ -92,9 +92,7 @@ public class UserAggregate {
     }
 
     public void rehydrate(List<EventStore> events) {
-        events.forEach(eventStore -> {
-            eventProcessorService.processEvent(eventStore, this::applyEvent);
-        });
+        events.forEach(eventStore -> eventProcessorService.processEvent(eventStore, this::applyEvent));
     }
 }
 
