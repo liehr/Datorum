@@ -53,7 +53,7 @@ public class AuthorizeView extends StackPane {
      */
     public void setAuthorizedContent(String roles, Supplier<Node> contentSupplier) {
         if (roles == null || contentSupplier == null) {
-            throw new IllegalArgumentException("Roles and contentSupplier cannot be null");
+            throw new IllegalArgumentException("roles and contentSupplier cannot be null");
         }
         Set<String> roleSet = new HashSet<>(Arrays.asList(roles.split(", *")));
         roleContentMap.put(roleSet, contentSupplier);
@@ -82,7 +82,7 @@ public class AuthorizeView extends StackPane {
         this.getChildren().clear();
 
         if (tokenProvider.getToken() != null) {
-            Set<String> userRoles = new HashSet<>(tokenProvider.getToken().Roles());
+            Set<String> userRoles = new HashSet<>(tokenProvider.getToken().roles());
 
             // Collect all matching nodes for the user roles
             List<Node> authorizedNodes = roleContentMap.entrySet().stream()

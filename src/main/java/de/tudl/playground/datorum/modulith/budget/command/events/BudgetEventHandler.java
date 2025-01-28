@@ -16,7 +16,7 @@ public class BudgetEventHandler {
     }
 
     @EventListener
-    public void handle(BudgetCreatedEvent event) {
+    public void on(BudgetCreatedEvent event) {
         Budget budget = new Budget();
         budget.setId(UUID.fromString(event.budgetId()));
         budget.setUserId(UUID.fromString(event.userId()));
@@ -25,5 +25,28 @@ public class BudgetEventHandler {
         budget.setAmount(event.amount());
 
         budgetRepository.save(budget);
+    }
+
+    @EventListener
+    public void on(BudgetUpdatedEvent event)
+    {
+        Budget budget = budgetRepository.findById(UUID.fromString(event.budgetId()))
+                .orElseThrow(() -> new IllegalArgumentException("Budget not found"));
+
+        budget.setUserId(UUID.fromString(event.userId()));
+        budget.setName(event.name());
+        budget.setDescription(event.description());
+        budget.setAmount(event.amount());
+
+        budgetRepository.save(budget);
+    }
+
+    @EventListener
+    public void on(BudgetDeletedEvent event)
+    {
+        Budget budget = budgetRepository.findById(UUID.fromString(event.budgetId()))
+                .orElseThrow(() -> new IllegalArgumentException("Budget not found"));
+
+        budgetRepository.delete(budget);
     }
 }

@@ -1,7 +1,11 @@
 package de.tudl.playground.datorum.modulith.budget.command.aggregate;
 
 import de.tudl.playground.datorum.modulith.budget.command.data.dto.CreateBudgetDto;
+import de.tudl.playground.datorum.modulith.budget.command.data.dto.DeleteBudgetDto;
+import de.tudl.playground.datorum.modulith.budget.command.data.dto.UpdateBudgetDto;
 import de.tudl.playground.datorum.modulith.budget.command.events.BudgetCreatedEvent;
+import de.tudl.playground.datorum.modulith.budget.command.events.BudgetDeletedEvent;
+import de.tudl.playground.datorum.modulith.budget.command.events.BudgetUpdatedEvent;
 import de.tudl.playground.datorum.modulith.eventstore.EventStore;
 import de.tudl.playground.datorum.modulith.eventstore.service.EventProcessorService;
 import lombok.Getter;
@@ -47,6 +51,37 @@ public class BudgetAggregate
         ));
     }
 
+    public void updateBudget(UpdateBudgetDto updateBudgetDto)
+    {
+        if (this.budgetId == null)
+        {
+            throw new IllegalArgumentException("Budget does not exist!");
+        }
+
+        apply(new BudgetUpdatedEvent(
+                this.budgetId,
+                updateBudgetDto.userId(),
+                updateBudgetDto.name(),
+                updateBudgetDto.description(),
+                updateBudgetDto.amount()
+        ));
+    }
+
+    public void deleteBudget(DeleteBudgetDto deleteDto) {
+        if (this.budgetId == null)
+        {
+            throw new IllegalArgumentException("Budget does not exist!");
+        }
+
+        apply(new BudgetDeletedEvent(
+                deleteDto.budgetId(),
+                this.userId,
+                this.budgetName,
+                this.budgetDescription,
+                this.budgetValue
+        ));
+    }
+
     private void apply(Object event) {
         this.changes.add(event);
         applyEvent(event);
@@ -60,11 +95,28 @@ public class BudgetAggregate
             this.budgetDescription = budgetCreatedEvent.description();
             this.budgetValue = budgetCreatedEvent.amount();
         }
+        else if(event instanceof BudgetUpdatedEvent budgetUpdatedEvent)
+        {
+            this.budgetId = budgetUpdatedEvent.budgetId();
+            this.userId = budgetUpdatedEvent.userId();
+            this.budgetName = budgetUpdatedEvent.name();
+            this.budgetDescription = budgetUpdatedEvent.description();
+            this.budgetValue = budgetUpdatedEvent.amount();
+        }
+        else if (event instanceof BudgetDeletedEvent)
+        {
+            this.budgetId = null;
+            this.userId = null;
+            this.budgetName = null;
+            this.budgetDescription = null;
+            this.budgetValue = 0;
+        }
     }
 
-    private void rehydrate(List<EventStore> events)
+    public void rehydrate(List<EventStore> events)
     {
         events.forEach(eventStore -> eventProcessorService.processEvent(eventStore, this::applyEvent));
     }
+
 
 }

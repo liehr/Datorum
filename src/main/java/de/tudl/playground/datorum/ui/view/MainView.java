@@ -9,12 +9,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
 
 @Component
+@Slf4j
 public class MainView implements ApplicationView {
 
     private final MainController mainController;
@@ -49,16 +51,16 @@ public class MainView implements ApplicationView {
         homeButton.setOnAction(e -> mainController.handleLogout());
 
         Button textButton = new Button("T");
-        textButton.setOnAction(e -> mainController.handleBudgetCreation());
+        textButton.setOnAction(e -> mainController.handleBudgetSearch());
 
         Button imageButton = new Button("🖼️");
-        imageButton.setOnAction(e -> System.out.println("Image clicked"));
+        imageButton.setOnAction(e -> log.info("Image clicked"));
 
         Button clipboardButton = new Button("📋");
-        clipboardButton.setOnAction(e -> System.out.println("Clipboard clicked"));
+        clipboardButton.setOnAction(e -> log.info("Clipboard clicked"));
 
         Button gridButton = new Button("🗂️");
-        gridButton.setOnAction(e -> System.out.println("Grid clicked"));
+        gridButton.setOnAction(e -> log.info("Grid clicked"));
 
         return List.of(homeButton, textButton, imageButton, clipboardButton, gridButton);
     }

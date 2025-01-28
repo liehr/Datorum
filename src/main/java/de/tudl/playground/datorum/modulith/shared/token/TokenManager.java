@@ -31,7 +31,7 @@ import java.util.UUID;
  * A token consists of the following components:
  * <ul>
  *     <li>Username: The identity of the user.</li>
- *     <li>Roles: A list of roles associated with the user.</li>
+ *     <li>roles: A list of roles associated with the user.</li>
  *     <li>Expiration Date: The date and time when the token expires.</li>
  *     <li>Signature: A cryptographic hash of the token data to ensure integrity.</li>
  * </ul>
@@ -108,7 +108,7 @@ public class TokenManager {
     }
 
     public static boolean validateToken(Token token, String secretKey) {
-        String payload = gson.toJson(new Token(token.userId(), token.username(), token.Roles(), token.expirationDate(), ""));
+        String payload = gson.toJson(new Token(token.userId(), token.username(), token.roles(), token.expirationDate(), ""));
         String expectedSignature = sign(payload, secretKey);
 
         return expectedSignature.equals(token.signature()) &&

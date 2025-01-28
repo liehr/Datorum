@@ -32,9 +32,9 @@ class DefaultQueryGatewayBasicTests {
     void testNoHandlersRegistered() {
         // Arrange
         when(applicationContext.getBeansOfType(QueryHandler.class)).thenReturn(Map.of());
-
+        TestQueries.SampleQuery sampleQuery = new TestQueries.SampleQuery();
         // Act & Assert
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> queryGateway.query(new TestQueries.SampleQuery()));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> queryGateway.query(sampleQuery));
         assertEquals("No handler found for query type: de.tudl.playground.datorum.gateway.helpers.TestQueries$SampleQuery", exception.getMessage());
     }
 
@@ -57,9 +57,9 @@ class DefaultQueryGatewayBasicTests {
     void testQueryTypeNotMatchableToAnyHandler() {
         // Arrange
         when(applicationContext.getBeansOfType(QueryHandler.class)).thenReturn(Map.of());
-
+        TestQueries.GenericQuery genericQuery = new TestQueries.GenericQuery();
         // Act & Assert
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> queryGateway.query(new TestQueries.GenericQuery()));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> queryGateway.query(genericQuery));
         assertEquals("No handler found for query type: de.tudl.playground.datorum.gateway.helpers.TestQueries$GenericQuery", exception.getMessage());
     }
 }
