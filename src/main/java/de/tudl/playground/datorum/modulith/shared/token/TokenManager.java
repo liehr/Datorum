@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Utility class for creating and validating authentication tokens.
@@ -40,7 +41,7 @@ import java.util.List;
  *
  * <h2>Methods:</h2>
  * <ul>
- *     <li>{@link #createToken(String, List, String)}: Creates a token with user details, roles, and a cryptographic signature.</li>
+ *     <li>{@link #createToken(String, String, List, String)}: Creates a token with user details, roles, and a cryptographic signature.</li>
  *     <li>{@link #validateToken(Token, String)}: Validates the authenticity and expiration of a token.</li>
  * </ul>
  *
@@ -94,20 +95,20 @@ public class TokenManager {
         throw new IllegalStateException("Utility class");
     }
 
-    public static Token createToken(String username, List<String> roles, String secretKey) {
+    public static Token createToken(String userId, String username, List<String> roles, String secretKey) {
         LocalDateTime expirationDate = LocalDateTime.ofInstant(
                 Instant.now().plusSeconds(43200), // 12-hour expiration
                 ZoneId.systemDefault()
         );
 
-        String payload = gson.toJson(new Token(username, roles, expirationDate.toString(), ""));
+        String payload = gson.toJson(new Token(UUID.fromString(userId), username, roles, expirationDate.toString(), ""));
         String signature = sign(payload, secretKey);
 
-        return new Token(username, roles, expirationDate.toString(), signature);
+        return new Token(UUID.fromString(userId), username, roles, expirationDate.toString(), signature);
     }
 
     public static boolean validateToken(Token token, String secretKey) {
-        String payload = gson.toJson(new Token(token.username(), token.Roles(), token.expirationDate(), ""));
+        String payload = gson.toJson(new Token(token.userId(), token.username(), token.Roles(), token.expirationDate(), ""));
         String expectedSignature = sign(payload, secretKey);
 
         return expectedSignature.equals(token.signature()) &&

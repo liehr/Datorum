@@ -5,7 +5,7 @@ import de.tudl.playground.datorum.modulith.shared.util.HashingUtil;
 import de.tudl.playground.datorum.modulith.user.command.commands.CreateUserCommand;
 import de.tudl.playground.datorum.modulith.user.command.events.UserCreatedEvent;
 import de.tudl.playground.datorum.ui.util.StageSwitcher;
-import de.tudl.playground.datorum.ui.view.LoginView;
+import de.tudl.playground.datorum.ui.view.login.LoginView;
 import javafx.scene.control.Alert;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

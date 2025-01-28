@@ -5,7 +5,7 @@ import de.tudl.playground.datorum.ui.event.StageReadyEvent;
 import de.tudl.playground.datorum.ui.exception.ErrorLoadingViewException;
 import de.tudl.playground.datorum.ui.util.StageSwitcher;
 import de.tudl.playground.datorum.ui.view.ApplicationView;
-import de.tudl.playground.datorum.ui.view.LoginView;
+import de.tudl.playground.datorum.ui.view.login.LoginView;
 import de.tudl.playground.datorum.ui.view.MainView;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

@@ -1,0 +1,32 @@
+/* Styles for the navigation bar */
+.navigation-bar {
+    -fx-background-color: #f4f4f4; /* Background color of the navigation bar */
+    -fx-padding: 10px; /* Padding around the navigation bar */
+    -fx-border-color: #e0e0e0; /* Border color */
+    -fx-border-width: 2px 0 0 0; /* Top border only */
+}
+
+/* Styles for the buttons */
+.nav-button {
+    -fx-background-color: #ffffff; /* Button background color */
+    -fx-border-color: transparent; /* No border */
+    -fx-font-size: 18px; /* Font size for the icons */
+    -fx-text-fill: #333333; /* Text color */
+    -fx-effect: none; /* Removes default button effects */
+    -fx-background-radius: 25; /* Circular button effect */
+    -fx-transition: -fx-background-color 0.3s ease, -fx-scale-x 0.2s ease, -fx-scale-y 0.2s ease; /* Transitions for hover effects */
+}
+
+/* Hover effect */
+.nav-button:hover {
+    -fx-background-color: #d1e8ff; /* Hover background color */
+    -fx-scale-x: 1.1; /* Slight enlargement on hover */
+    -fx-scale-y: 1.1; /* Slight enlargement on hover */
+}
+
+/* Pressed effect */
+.nav-button:pressed {
+    -fx-background-color: #a0c4ff; /* Background color when pressed */
+    -fx-scale-x: 0.9; /* Slight shrinkage on press */
+    -fx-scale-y: 0.9; /* Slight shrinkage on press */
+}

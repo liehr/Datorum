@@ -21,4 +21,6 @@ public class DatorumApplication {
         // Launch the JavaFX application
         Application.launch(FingoApplication.class, args);
     }
+
+
 }

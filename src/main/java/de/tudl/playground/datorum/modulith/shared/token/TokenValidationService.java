@@ -1,6 +1,8 @@
 package de.tudl.playground.datorum.modulith.shared.token;
 
 import de.tudl.playground.datorum.modulith.shared.token.data.Token;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -66,13 +68,17 @@ import java.util.Optional;
  * @see TokenManager
  * @see Token
  */
+@Slf4j
 @Component
+@Scope("singleton")
 public class TokenValidationService {
 
     private final TokenFileService tokenFileService;
+    private final AuthTokenProvider authTokenProvider;
 
-    public TokenValidationService(TokenFileService tokenFileService) {
+    public TokenValidationService(TokenFileService tokenFileService, AuthTokenProvider authTokenProvider) {
         this.tokenFileService = tokenFileService;
+        this.authTokenProvider = authTokenProvider;
     }
 
     public boolean isValidToken() throws IOException {
@@ -80,10 +86,15 @@ public class TokenValidationService {
             String key = KeyManager.loadKey();
             if (tokenFileService.isTokenFilePresent()) {
                 Optional<Token> token = tokenFileService.readToken();
-                return token.filter(value -> TokenManager.validateToken(value, key)).isPresent();
+
+                if (token.isPresent() && TokenManager.validateToken(token.get(), key))
+                    {
+                        authTokenProvider.setToken(token.get());
+                        return true;
+                    }
             }
         } catch (Exception e) {
-            throw new IOException("Cannot load Key or Token from File!", e);
+            throw new IOException("Cannot load key or token from file!", e);
         }
         return false;
     }

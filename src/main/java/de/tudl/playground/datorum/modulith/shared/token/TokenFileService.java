@@ -16,8 +16,8 @@ import java.util.Optional;
  * <p>
  * This class provides methods to write, read, delete, and check the existence of the token file.
  * It ensures proper handling of the token's lifecycle and facilitates secure token storage.
- * The token file is stored in the {@code .datorum} directory within the user's application data directory
- * as determined by the {@code APPDATA} environment variable.
+ * The token file is stored in the {@code .datorum} directory within the user's home directory
+ * as determined by the {@code user.home} system property.
  * </p>
  *
  * <h2>Key Features:</h2>
@@ -28,9 +28,9 @@ import java.util.Optional;
  *     <li>Checks for the presence of the token file.</li>
  * </ul>
  *
- * <h2>Environment Variable Dependency:</h2>
- * This class relies on the {@code APPDATA} environment variable to determine the directory
- * where the token file ({@code auth.json}) will be stored.
+ * <h2>Cross-Platform Compatibility:</h2>
+ * This class determines the directory for storing the token file based on the {@code user.home}
+ * system property, ensuring compatibility across Windows, Linux, and macOS.
  *
  * <h2>Thread Safety:</h2>
  * This class is not thread-safe as it performs file I/O operations. Synchronization may be required
@@ -42,13 +42,17 @@ import java.util.Optional;
 @Service
 public class TokenFileService {
 
-    private static final String APPDATA = System.getenv("APPDATA");
     private static final String DIRECTORY_NAME = ".datorum";
     private static final String AUTH_JSON_FILE = "auth.json";
-    private static final Path TOKEN_DIRECTORY_PATH = Paths.get(APPDATA, DIRECTORY_NAME);
+    private static final Path TOKEN_DIRECTORY_PATH = Paths.get(System.getProperty("user.home"), DIRECTORY_NAME);
     private static final Path TOKEN_FILE_PATH = TOKEN_DIRECTORY_PATH.resolve(AUTH_JSON_FILE);
     private final Gson gson = new Gson();
 
+    /**
+     * Constructor to ensure the token directory exists.
+     *
+     * @throws IOException If the directory cannot be created.
+     */
     public TokenFileService() throws IOException {
         ensureDirectoryExists();
     }
