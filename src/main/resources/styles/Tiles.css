@@ -1,0 +1,52 @@
+/* Tile Container: Clean, Minimal, and Sleek */
+.tile-container {
+    -fx-background-color: #DDE6F0; /* Dark neutral background */
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-spacing: 15;
+    -fx-alignment: center;
+    -fx-border-color: #c2d2e4;
+    -fx-border-width: 0.8;
+}
+
+/* Tile Title: Simple, Clean, Bootstrap-Like */
+.tile-title {
+    -fx-text-fill: #21354b;
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+/* Value Label (Big Number) */
+.tile-value {
+    -fx-text-fill: #4b78aa; /* Bootstrap Teal Accent */
+    -fx-font-size: 36px;
+    -fx-font-weight: 700;
+    -fx-font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+/* Responsive Chart Styling */
+.chart {
+    -fx-background-color: transparent;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-legend {
+    -fx-text-fill: #21354b;
+}
+
+.axis {
+    -fx-tick-label-fill: rgba(33,53,75, 0.85);
+}
+
+.axis-label {
+    -fx-tick-label-fill: rgba(33,53,75, 0.85);
+}
+
+.chart-bar {
+    -fx-bar-fill: #638cba;
+}

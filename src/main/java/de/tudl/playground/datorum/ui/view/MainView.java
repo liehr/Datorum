@@ -2,14 +2,18 @@ package de.tudl.playground.datorum.ui.view;
 
 import de.tudl.playground.datorum.modulith.shared.token.AuthTokenProvider;
 import de.tudl.playground.datorum.ui.controller.MainController;
+import de.tudl.playground.datorum.ui.view.dashboard.DashboardView;
 import de.tudl.playground.datorum.ui.view.nav.BottomNavigationBar;
+import de.tudl.playground.datorum.ui.view.tile.TileComponent;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,26 +25,32 @@ public class MainView implements ApplicationView {
 
     private final MainController mainController;
     private final AuthTokenProvider tokenProvider;
+    private final ApplicationContext applicationContext;
+    private DashboardView dashboardView;
 
-    public MainView(MainController mainController, AuthTokenProvider tokenProvider) {
+    public MainView(MainController mainController, AuthTokenProvider tokenProvider, ApplicationContext applicationContext) {
         this.mainController = mainController;
         this.tokenProvider = tokenProvider;
+        this.applicationContext = applicationContext;
     }
 
     private Node getAdminContent() {
         StackPane stackPane = new StackPane();
+        stackPane.getStyleClass().add("main-pane");
+
+        // Ensure it fills the entire scene
+        stackPane.setPrefSize(1280, 720);  // Adjust to match your scene size
+        stackPane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
         List<Button> buttons = getButtons();
-        // Create BottomNavigationBar
         BottomNavigationBar bottomNavigationBar = new BottomNavigationBar(buttons);
 
-        // Create Title Label
         Label title = new Label("Datorum Admin View");
 
-        // Add children to the StackPane
-        stackPane.getChildren().addAll(bottomNavigationBar, title);
+        dashboardView = applicationContext.getBean(DashboardView.class);
+        dashboardView.initialize();
 
-        // Align components
+        stackPane.getChildren().addAll(dashboardView.createNode(), title, bottomNavigationBar);
         StackPane.setAlignment(title, Pos.TOP_CENTER);
 
         return stackPane;
@@ -76,7 +86,12 @@ public class MainView implements ApplicationView {
                 () -> new Label("You are not authorized!"));
 
         Scene scene = new Scene(authorizeView);
+
+        dashboardView.setScene(scene);
+
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/BottomNavigationBar.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/Tiles.css")).toExternalForm());
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/Main.css")).toExternalForm());
 
         return scene;
     }

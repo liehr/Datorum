@@ -1,6 +1,6 @@
 /* Styles for the navigation bar */
 .navigation-bar {
-    -fx-background-color: #f4f4f4; /* Background color of the navigation bar */
+    -fx-background-color: transparent; /* Background color of the navigation bar */
     -fx-padding: 10px; /* Padding around the navigation bar */
     -fx-border-color: #e0e0e0; /* Border color */
     -fx-border-width: 2px 0 0 0; /* Top border only */

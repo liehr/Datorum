@@ -26,19 +26,19 @@ public class MainController
     private final StageSwitcher stageSwitcher;
     private final ModalPresenter modalPresenter;
     private final CommandGateway commandGateway;
-    private final QueryGateway queryGateway;
     private final AuthTokenProvider authTokenProvider;
-    private Token token;
+
+
     public MainController(AuthTokenProvider authTokenProvider, StageSwitcher stageSwitcher, ModalPresenter modalPresenter, CommandGateway commandGateway, QueryGateway queryGateway) {
         this.stageSwitcher = stageSwitcher;
         this.modalPresenter = modalPresenter;
         this.commandGateway = commandGateway;
         this.authTokenProvider = authTokenProvider;
-        this.queryGateway = queryGateway;
     }
 
     public void handleLogout()
     {
+        Token token;
         token = authTokenProvider.getToken();
         commandGateway.send(new LogoutUserCommand(token.username()));
     }

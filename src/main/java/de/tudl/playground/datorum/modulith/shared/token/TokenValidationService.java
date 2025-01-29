@@ -1,11 +1,15 @@
 package de.tudl.playground.datorum.modulith.shared.token;
 
+import de.tudl.playground.datorum.modulith.auth.command.events.AutomaticLoginEvent;
+import de.tudl.playground.datorum.modulith.auth.command.events.LoginSuccessfulEvent;
+import de.tudl.playground.datorum.modulith.eventstore.EventPublisher;
 import de.tudl.playground.datorum.modulith.shared.token.data.Token;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -75,10 +79,12 @@ public class TokenValidationService {
 
     private final TokenFileService tokenFileService;
     private final AuthTokenProvider authTokenProvider;
+    private final EventPublisher eventPublisher;
 
-    public TokenValidationService(TokenFileService tokenFileService, AuthTokenProvider authTokenProvider) {
+    public TokenValidationService(TokenFileService tokenFileService, AuthTokenProvider authTokenProvider, EventPublisher eventPublisher) {
         this.tokenFileService = tokenFileService;
         this.authTokenProvider = authTokenProvider;
+        this.eventPublisher = eventPublisher;
     }
 
     public boolean isValidToken() throws IOException {
@@ -90,6 +96,13 @@ public class TokenValidationService {
                 if (token.isPresent() && TokenManager.validateToken(token.get(), key))
                     {
                         authTokenProvider.setToken(token.get());
+                        eventPublisher.publishEvent(new AutomaticLoginEvent(
+                                token.get().userId().toString(),
+                                token.get().username(),
+                                token.get().roles(),
+                                token.get().signature()
+                        ));
+
                         return true;
                     }
             }
